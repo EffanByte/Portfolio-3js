@@ -7,3 +7,30 @@ html, body {
    height: 100%;
    display: block;
 }
+.shot-control {
+   position: fixed;
+   z-index: 1;
+   left: 20px;
+   bottom: 20px;
+   display: grid;
+   grid-template-columns: 1fr auto;
+   gap: 8px 16px;
+   width: min(240px, calc(100vw - 64px));
+   padding: 12px 14px;
+   border: 1px solid rgba(227, 237, 218, 0.28);
+   border-radius: 6px;
+   background: rgba(18, 25, 20, 0.9);
+   color: #eef1e8;
+   font: 500 13px/1.2 system-ui, sans-serif;
+}
+.shot-control output {
+   color: #c5e77b;
+   font-variant-numeric: tabular-nums;
+}
+.shot-control input {
+   grid-column: 1 / -1;
+   width: 100%;
+   margin: 0;
+   accent-color: #c5e77b;
+   cursor: pointer;
+}

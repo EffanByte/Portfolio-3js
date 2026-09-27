@@ -8,6 +8,8 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { createPoolPhysics } from './poolPhysics.js';
+
 
 RectAreaLightUniformsLib.init();
 
@@ -18,9 +20,16 @@ const gltfLoader = new GLTFLoader();
 const fbxLoader = new FBXLoader();
 const nightRainScreenPosition = new THREE.Vector3(-1.9, 2, -3.5);
 const nightRainScreenHeight = 2;
+
+const physics = await createPoolPhysics();
+
 let ArcadeMachine, ArcadeMachine1, ArcadeMachine2, ArcadeMachine3, ArcadeMachine4, ArcadeMachine5, ArcadeMachine6;
 let nightRainAnimation = null;
 let tubeLightFlicker = null;
+let cueBallBody = null;
+let cueBallHitDirection = null;
+let previousPhysicsTime = 0;
+const cueBallMass = 0.17;
 
 function loadGLTF(path, onLoad) {
   gltfLoader.load(path, (gltf) => onLoad(gltf.scene), undefined, (error) => {
@@ -70,6 +79,85 @@ function importBilardoFbx() {
 
     const tableBounds = new THREE.Box3().setFromObject(object);
     const tableCenter = tableBounds.getCenter(new THREE.Vector3());
+    const tableSize = tableBounds.getSize(new THREE.Vector3());
+    const feltHeight = tableBounds.max.y - 0.0166;
+    const cushionWidth = 0.12;
+    const cushionHeight = 0.12;
+    const playWidth = tableSize.x - cushionWidth * 2;
+    const playDepth = tableSize.z - cushionWidth * 2;
+
+    function addStaticBox(position, size) {
+      const collider = new THREE.Mesh(
+        new THREE.BoxGeometry(size.x, size.y, size.z),
+        new THREE.MeshBasicMaterial({ visible: false })
+      );
+      collider.position.copy(position);
+      scene.add(collider);
+      physics.addMesh(collider);
+    }
+
+    addStaticBox(
+      new THREE.Vector3(tableCenter.x, feltHeight - 0.04, tableCenter.z),
+      new THREE.Vector3(playWidth, 0.08, playDepth)
+    );
+    addStaticBox(
+      new THREE.Vector3(tableCenter.x - playWidth / 2 - cushionWidth / 2, feltHeight + cushionHeight / 2, tableCenter.z),
+      new THREE.Vector3(cushionWidth, cushionHeight, playDepth + cushionWidth * 2)
+    );
+    addStaticBox(
+      new THREE.Vector3(tableCenter.x + playWidth / 2 + cushionWidth / 2, feltHeight + cushionHeight / 2, tableCenter.z),
+      new THREE.Vector3(cushionWidth, cushionHeight, playDepth + cushionWidth * 2)
+    );
+    addStaticBox(
+      new THREE.Vector3(tableCenter.x, feltHeight + cushionHeight / 2, tableCenter.z - playDepth / 2 - cushionWidth / 2),
+      new THREE.Vector3(playWidth, cushionHeight, cushionWidth)
+    );
+    addStaticBox(
+      new THREE.Vector3(tableCenter.x, feltHeight + cushionHeight / 2, tableCenter.z + playDepth / 2 + cushionWidth / 2),
+      new THREE.Vector3(playWidth, cushionHeight, cushionWidth)
+    );
+
+    loadGLTF('/pool-balls/eight-ball-set.gltf', (poolBalls) => {
+      poolBalls.position.set(tableCenter.x, feltHeight, tableCenter.z);
+      poolBalls.rotation.y = Math.PI / 2;
+      scene.add(poolBalls);
+      poolBalls.updateMatrixWorld(true);
+      const rackCenter = new THREE.Vector3();
+      let rackBallCount = 0;
+
+      for (let ballNumber = 0; ballNumber <= 15; ballNumber++) {
+        const ballName = ballNumber === 0
+          ? 'CueBall'
+          : `Ball_${String(ballNumber).padStart(2, '0')}`;
+        const visual = poolBalls.getObjectByName(ballName);
+        if (!visual?.isMesh) continue;
+
+        const body = new THREE.Mesh(
+          new THREE.SphereGeometry(0.05, 16, 12),
+          new THREE.MeshBasicMaterial({ visible: false })
+        );
+        body.name = `${ballName}_PhysicsBody`;
+        body.position.copy(visual.getWorldPosition(new THREE.Vector3()));
+        body.quaternion.copy(visual.getWorldQuaternion(new THREE.Quaternion()));
+        scene.attach(visual);
+        scene.add(body);
+        body.attach(visual);
+        physics.addMesh(body, cueBallMass, 0.82);
+
+        if (ballName === 'CueBall') {
+          cueBallBody = body;
+          visual.userData.physicsBody = body;
+        } else {
+          rackCenter.add(body.position);
+          rackBallCount++;
+        }
+      }
+
+      if (cueBallBody && rackBallCount > 0) {
+        rackCenter.divideScalar(rackBallCount);
+        cueBallHitDirection = rackCenter.sub(cueBallBody.position).setY(0).normalize();
+      }
+    });
     const tableLight = new THREE.SpotLight(0xffffff, 100, 0, Math.PI / 5, 0.5, 2);
     tableLight.position.set(tableCenter.x, tableBounds.max.y + 3, tableCenter.z);
     tableLight.target.position.copy(tableCenter);
@@ -173,12 +261,36 @@ windowResponsiveResize();
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+const shotSpeedInput = document.querySelector('#shot-speed');
+const shotSpeedValue = document.querySelector('#shot-speed-value');
+
+shotSpeedInput.addEventListener('input', () => {
+  shotSpeedValue.value = `${Number(shotSpeedInput.value).toFixed(1)} m/s`;
+});
+
+function shootCueBall() {
+  if (!cueBallBody || !cueBallHitDirection) return;
+  const speed = Number(shotSpeedInput.value);
+  physics.applyCentralImpulse(
+    cueBallBody,
+    cueBallHitDirection.clone().multiplyScalar(cueBallMass * speed)
+  );
+}
 
 // 2. Track mouse movement and normalize coordinates (-1 to +1)
 window.addEventListener('click', (event) => {
+    if (event.target !== canvas) return;
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    checkIntersection();
+    const intersection = checkIntersection();
+    let hitObject = intersection?.object;
+    while (hitObject && hitObject !== scene) {
+      if (hitObject.userData.physicsBody === cueBallBody) {
+        shootCueBall();
+        return;
+      }
+      hitObject = hitObject.parent;
+    }
 });
 
 window.addEventListener('mousemove', (event) => {
@@ -221,6 +333,11 @@ scene.add(rightwall);
 //controls.enabled = false;
 
 function animate( time ) {
+  const deltaSeconds = previousPhysicsTime === 0
+    ? 0
+    : (time - previousPhysicsTime) / 1000;
+  previousPhysicsTime = time;
+  physics.step(deltaSeconds);
   updateTubeLightFlicker(time);
 
   if (nightRainAnimation && time >= nightRainAnimation.nextFrameTime && !nightRainAnimation.isDecoding) {
