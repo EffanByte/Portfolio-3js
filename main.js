@@ -30,6 +30,8 @@ let cueBallBody = null;
 let cueBallHitDirection = null;
 let previousPhysicsTime = 0;
 let arcadeScreenMaterial = null;
+let tableLightPivot = null;
+let hangingLightPivot = null;
 const cueBallMass = 0.17;
 
 function loadGLTF(path, onLoad) {
@@ -185,19 +187,25 @@ function importBilardoFbx() {
         cueBallHitDirection = rackCenter.sub(cueBallBody.position).setY(0).normalize();
       }
     });
-    const tableLight = new THREE.SpotLight(0xffffff, 100, 0, Math.PI / 5, 0.5, 2);
-    tableLight.position.set(tableCenter.x, tableBounds.max.y + 3, tableCenter.z);
-    tableLight.target.position.copy(tableCenter);
-
+    tableLightPivot = new THREE.Group();
+    tableLightPivot.position.set(tableCenter.x, tableBounds.max.y + 3.5, tableCenter.z);
+    const tableLight = new THREE.SpotLight(0xffffff, 75, 0, Math.PI / 5, 0.5, 2);
+    tableLight.position.y = -0.5;
+    tableLight.target.position.set(0, tableCenter.y - tableLightPivot.position.y, 0);
+    tableLightPivot.add(tableLight, tableLight.target);
     scene.add(object);
-    scene.add(tableLight, tableLight.target);
+    scene.add(tableLightPivot);
   });
-    loadGLTF('/pool-table/hanging_light.glb', (gltf) => {
-    
-    gltf.position.set(1.5, 2, -4);
-    gltf.scale.set(1,1,1);
-
-    scene.add(gltf);
+  loadGLTF('/pool-table/hanging_light.glb', (gltf) => {
+    gltf.scale.set(1, 1, 1);
+    gltf.updateMatrixWorld(true);
+    const lightBounds = new THREE.Box3().setFromObject(gltf);
+    const suspensionY = lightBounds.max.y;
+    hangingLightPivot = new THREE.Group();
+    hangingLightPivot.position.set(1.5, 2 + suspensionY, -4);
+    gltf.position.y = -suspensionY;
+    hangingLightPivot.add(gltf);
+    scene.add(hangingLightPivot);
   });
 
 }
@@ -338,7 +346,7 @@ controls.minAzimuthAngle = 1.57;
 controls.maxAzimuthAngle = 1.57; // Preventing updates
 controls.update(); // Position doesn't update without it
 
-scene.add(new THREE.AmbientLight(0xffffff, 1.0)); 
+scene.add(new THREE.AmbientLight(0xffffff, 0)); 
 
 let textureLoader = new THREE.TextureLoader();
 
@@ -361,6 +369,15 @@ scene.add(rightwall);
 //controls.enabled = false;
 
 function animate( time ) {
+  const seconds = time / 500;
+  if (tableLightPivot) {
+    tableLightPivot.rotation.x = 0.025 * Math.sin(seconds * 0.8);
+    tableLightPivot.rotation.z = 0.035 * Math.sin(seconds * 0.65 + 0.8);
+  }
+  if (hangingLightPivot) {
+    hangingLightPivot.rotation.x = 0.25 * Math.sin(seconds * 0.7 + 1.4);
+    hangingLightPivot.rotation.z = 0.25 * Math.sin(seconds * 0.55);
+  }
   if (arcadeScreenMaterial) {
     arcadeScreenMaterial.uniforms.uTime.value = time / 1000;
   }
