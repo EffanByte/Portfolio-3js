@@ -9,6 +9,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { createPoolPhysics } from './poolPhysics.js';
+import { CSS3DRenderer } from 'three/examples/jsm/Addons.js';
 
 
 RectAreaLightUniformsLib.init();
@@ -32,7 +33,12 @@ let previousPhysicsTime = 0;
 let arcadeScreenMaterial = null;
 let tableLightPivot = null;
 let hangingLightPivot = null;
+let screen = null;
+let cameraPan = null;
+let coinAnimation = null;
 const cueBallMass = 0.17;
+const coinAnimationDuration = 2000;
+const coinDropDistance = 0.1;
 
 function loadGLTF(path, onLoad) {
   gltfLoader.load(path, (gltf) => onLoad(gltf.scene), undefined, (error) => {
@@ -50,37 +56,36 @@ loadGLTF('/arcade-machine/Arcade_Machine.glb', (arcadeModel) => {
 
   arcadeModel.position.y = -1;
   ArcadeMachine = arcadeModel;
-  ArcadeMachine1 = arcadeModel.clone();
-  ArcadeMachine2 = arcadeModel.clone();
-  ArcadeMachine3 = arcadeModel.clone();
-  ArcadeMachine4 = arcadeModel.clone();
-  ArcadeMachine5 = arcadeModel.clone();
-  ArcadeMachine6 = arcadeModel.clone();
-
   ArcadeMachine.position.x = -2
-  ArcadeMachine1.position.z += 1;
-  ArcadeMachine2.position.z += 2;
-  ArcadeMachine3.position.z += -1;
-  ArcadeMachine4.position.z += -2;
-  ArcadeMachine5.position.z += 3;
-  ArcadeMachine6.position.z += -3;
   scene.add(ArcadeMachine);
-  // scene.add(ArcadeMachine1);
-  // scene.add(ArcadeMachine2);
-  // scene.add(ArcadeMachine3);
-  // scene.add(ArcadeMachine4);
-  // scene.add(ArcadeMachine5);
-  // scene.add(ArcadeMachine6);
+
+  const insertCoinTexture = new THREE.TextureLoader().load('/InsertCoin.png');
+  insertCoinTexture.colorSpace = THREE.SRGBColorSpace;
+  const insertCoin = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.105, 0.105),
+    new THREE.MeshBasicMaterial({
+      map: insertCoinTexture,
+      transparent: true,
+      alphaTest: 0.05,
+      toneMapped: false
+    })
+  );
+  insertCoin.name = 'InsertCoin';
+  // Sit just above the sloped control panel, to the left of the joystick.
+  insertCoin.position.set(0.3389, 0.978, 0.136);
+  insertCoin.rotation.set(-Math.PI / 2 + 0.182, Math.PI / 2, 0, 'YXZ');
+  ArcadeMachine.add(insertCoin);
+  
   const screenPosition = ArcadeMachine.position.clone()
-    .add(new THREE.Vector3(0.30, 1.33, 0));
+    .add(new THREE.Vector3(0.3, 1.348, 0));
   let screenTexture = new THREE.TextureLoader().load("/Floor.png");
   screenTexture.colorSpace = THREE.SRGBColorSpace;
-  const screen = createPlane(
-  0.65,
-  0.55,
+  screen = createPlane(
+  0.61,
+  0.53,
   0xffffff,
   screenPosition,
-  { x: 0, y: Math.PI / 2, z: 0 },
+  new THREE.Euler(-0.3, Math.PI/2, 0),
   screenTexture
 );
 // 4. Create the Material
@@ -93,11 +98,11 @@ loadGLTF('/arcade-machine/Arcade_Machine.glb', (arcadeModel) => {
   });
   arcadeScreenMaterial = noiseMaterial;
   screen.material = noiseMaterial;
-  // screen.material.emissive.set(0xffffff);
-  // screen.material.emissiveMap = screenTexture;
-  // screen.material.emissiveIntensirequestAnimationFrame(animate);ty = 8;
-  // screen.material.needsUpdate = true;
   scene.add(screen);
+
+  const screenLight = new THREE.PointLight(0x8adfff, 0.5, 1, 4);
+  screenLight.position.copy(screenPosition).add(new THREE.Vector3(0.35, 0.05, 0));
+  scene.add(screenLight);
 } );
 
 function importBilardoFbx() {
@@ -222,6 +227,40 @@ function importPubCounter() {
 
 importPubCounter();
 
+function insertCoin() {
+  const insertCoinObject = ArcadeMachine?.getObjectByName('InsertCoin');
+  if (!insertCoinObject || coinAnimation) return;
+
+  loadGLTF('/coin.glb', (coin) => {
+    if (coinAnimation) return;
+
+    coin.position.copy(insertCoinObject.getWorldPosition(new THREE.Vector3()));
+    coin.position.y += 0.06;
+    coin.position.z += 0.031;
+    coin.position.x += 0.01;
+    coin.scale.set(0.2, 0.2, 0.2);
+    scene.add(coin);
+    coinAnimation = {
+      coin,
+      startTime: performance.now(),
+      startY: coin.position.y,
+      startRotationZ: coin.rotation.z
+    };
+  });
+}
+
+function updateCoinAnimation(time) {
+  if (!coinAnimation) return;
+
+  const progress = THREE.MathUtils.clamp(
+    (time - coinAnimation.startTime) / coinAnimationDuration, 0, 1
+  );
+  coinAnimation.coin.position.y = coinAnimation.startY - coinDropDistance * progress;
+  coinAnimation.coin.rotation.z = coinAnimation.startRotationZ + Math.PI * 2 * progress;
+
+  if (progress === 1) coinAnimation = null;
+}
+
 function importTubeLight() {
   loadGLTF('/tubelight/light.gltf', (tubeLight) => {
     tubeLight.position.set(-2, 3, 3);
@@ -269,7 +308,16 @@ function importVendingMachine() {
     vendingMachine.position.set(-2, -1, 3);
     vendingMachine.rotation.set(0, Math.PI/2,0);
     vendingMachine.scale.set(3, 3, 3);
-    
+
+    vendingMachine.traverse((child) => {
+      if (!child.isMesh) return;
+
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      for (const material of materials) {
+        if (material.emissiveMap) material.emissiveIntensity = 1.35;
+      }
+    });
+
     scene.add(vendingMachine);
   });
 }
@@ -287,25 +335,20 @@ const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
 composer.addPass(new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  0.75,
+  0.6,
   1,
-  4,
+  3,
 ));
 composer.addPass(new OutputPass());
 windowResponsiveResize();
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-const shotSpeedInput = document.querySelector('#shot-speed');
-const shotSpeedValue = document.querySelector('#shot-speed-value');
 
-shotSpeedInput.addEventListener('input', () => {
-  shotSpeedValue.value = `${Number(shotSpeedInput.value).toFixed(1)} m/s`;
-});
 
 function shootCueBall() {
   if (!cueBallBody || !cueBallHitDirection) return;
-  const speed = Number(shotSpeedInput.value);
+  const speed = Number(2);
   physics.applyCentralImpulse(
     cueBallBody,
     cueBallHitDirection.clone().multiplyScalar(cueBallMass * speed)
@@ -324,6 +367,14 @@ window.addEventListener('click', (event) => {
         shootCueBall();
         return;
       }
+      if(hitObject.name === 'InsertCoin') {
+        insertCoin();
+      }
+      if (hitObject === ArcadeMachine || hitObject === screen) {
+        panCameratoScreen();
+        return;
+      }
+      
       hitObject = hitObject.parent;
     }
 });
@@ -346,33 +397,58 @@ controls.minAzimuthAngle = 1.57;
 controls.maxAzimuthAngle = 1.57; // Preventing updates
 controls.update(); // Position doesn't update without it
 
-scene.add(new THREE.AmbientLight(0xffffff, 0)); 
+scene.add(new THREE.AmbientLight(0xffffff, 0.05)); 
 
-let textureLoader = new THREE.TextureLoader();
+const floorTexture = new THREE.TextureLoader().load('/Floor.png');
+floorTexture.wrapS = THREE.RepeatWrapping;
+floorTexture.wrapT = THREE.RepeatWrapping;
+floorTexture.repeat.set(3, 3);
+scene.add(createPlane(
+  10,
+  15,
+  0x808080,
+  { x: 0, y: -1, z: 0 },
+  new THREE.Euler(-Math.PI / 2, 0, 0),
+  floorTexture
+));
 
 
-let texture = textureLoader.load('/Floor.png');
-texture.wrapS = THREE.RepeatWrapping;
-texture.wrapT = THREE.RepeatWrapping;
-texture.repeat.set(3, 3);
-let floor = createPlane(10, 15, 0x808080, { x: 0, y: -1, z: 0 }, { x: -Math.PI / 2, y: 0, z: 0 }, texture);
-let ceiling = createPlane(10, 15, 0x808080, { x: 0, y: 5, z: 0 }, { x: Math.PI / 2, y: 0, z: 0 });
-let wall = createPlane(15, 10, 0xffffff, { x: -3, y: 0, z: 0 }, { x: 0, y: Math.PI/2, z: 0 });
-let rightwall = createPlane(15, 10, 0xffffff, { x: 0, y: 0, z: 7.5 }, { x: 0, y: 0, z: 0 });
-let leftwall = createPlane(15, 10, 0xffffff, { x: 0, y: 0, z: -7.5 }, { x: 0, y: 0, z: 0 }, );
-scene.add(wall);
-scene.add(floor);
-scene.add(ceiling);
-scene.add(leftwall);
-scene.add(rightwall);
+loadGLTF('/Room.glb', (room) => {
+  room.scale.setScalar(3);
+  room.updateMatrixWorld(true);
+const roomCenter = new THREE.Box3().setFromObject(room).getCenter(new THREE.Vector3());
+  room.position.set(-roomCenter.x, 2 - roomCenter.y, -roomCenter.z);
+  scene.add(room);
+});
 
-//controls.enabled = false;
 
 function animate( time ) {
+  updateCoinAnimation(time);
+
+  if (cameraPan) {
+    const progress = Math.min((performance.now() - cameraPan.startTime) / cameraPan.duration, 1);
+    const easedProgress = progress * progress * (3 - 2 * progress);
+    camera.position.lerpVectors(cameraPan.startPosition, cameraPan.endPosition, easedProgress);
+    controls.target.lerpVectors(cameraPan.startTarget, cameraPan.endTarget, easedProgress);
+    camera.lookAt(controls.target);
+
+    if (progress === 1) {
+      const offset = camera.position.clone().sub(controls.target);
+      const spherical = new THREE.Spherical().setFromVector3(offset);
+      controls.minPolarAngle = spherical.phi;
+      controls.maxPolarAngle = spherical.phi;
+      controls.minAzimuthAngle = spherical.theta;
+      controls.maxAzimuthAngle = spherical.theta;
+      controls.enabled = true;
+      controls.update();
+      cameraPan = null;
+    }
+  }
+
   const seconds = time / 500;
   if (tableLightPivot) {
-    tableLightPivot.rotation.x = 0.025 * Math.sin(seconds * 0.8);
-    tableLightPivot.rotation.z = 0.035 * Math.sin(seconds * 0.65 + 0.8);
+    tableLightPivot.rotation.x = 0.25 * Math.sin(seconds * 0.7 + 1.4);
+    tableLightPivot.rotation.z = 0.25 * Math.sin(seconds * 0.55);
   }
   if (hangingLightPivot) {
     hangingLightPivot.rotation.x = 0.25 * Math.sin(seconds * 0.7 + 1.4);
@@ -491,14 +567,16 @@ function importRainWindow() {
   });
 }
 
-function createPlane(width, height, color = 0xffffff, position = { x: 0, y: 0, z: 0 }, rotation = { x: 0, y: 0, z: 0 }, texture = null) {
+function createPlane(width, height, color = 0xffffff, position = { x: 0, y: 0, z: 0 }, rotation = new THREE.Euler(), texture = null) {
   const geometry = new THREE.PlaneGeometry(width, height);
   const materialOptions = { color: color, side: THREE.DoubleSide };
   if (texture) materialOptions.map = texture;
   const material = new THREE.MeshStandardMaterial(materialOptions);
   const plane = new THREE.Mesh(geometry, material);
   plane.position.set(position.x, position.y, position.z);
-  plane.rotation.set(rotation.x, rotation.y, rotation.z);
+  plane.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), rotation.x);
+  plane.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), rotation.y);
+  plane.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), rotation.z);
   return plane;
 }
 
@@ -519,6 +597,27 @@ function windowResponsiveResize()
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     composer.setSize(width, height);
 });
+}
+
+function panCameratoScreen() {
+  if (!screen || cameraPan) return;
+
+  screen.updateMatrixWorld(true);
+  const screenCenter = screen.getWorldPosition(new THREE.Vector3());
+  const screenNormal = screen.getWorldDirection(new THREE.Vector3()).normalize();
+  const destination = screenCenter.clone()
+    .addScaledVector(screenNormal, 0.85)
+    .add(new THREE.Vector3(0, 0.04, 0));
+
+  cameraPan = {
+    startTime: performance.now(),
+    duration: 1600,
+    startPosition: camera.position.clone(),
+    endPosition: destination,
+    startTarget: controls.target.clone(),
+    endTarget: screenCenter
+  };
+  controls.enabled = false;
 }
 
 // Perform the raycast in the animation loop or click event
@@ -628,7 +727,9 @@ const fragmentShader = `
     vec3 colorA = vec3(0.1, 0.1,0.1); // Deep Blue
     vec3 colorB = vec3(1.0,1.0,1.0); // Warm Amber
     vec3 finalColor = mix(colorA, colorB, noiseVal);
-    
-    gl_FragColor = vec4(finalColor, 1.0);
+    float emissionMask = smoothstep(0.82, 0.98, noiseVal);
+    vec3 emittedColor = finalColor * (2.0 + emissionMask * 2.0);
+
+    gl_FragColor = vec4(emittedColor, 1.0);
   }
 `;
