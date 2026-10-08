@@ -9,12 +9,13 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { createPoolPhysics } from './poolPhysics.js';
-import { CSS3DRenderer } from 'three/examples/jsm/Addons.js';
+import { CSS3DObject, CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
 
 
 RectAreaLightUniformsLib.init();
 
 const scene = new THREE.Scene();
+const arcadeHtmlScene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
 const gltfLoader = new GLTFLoader();
@@ -31,6 +32,7 @@ let cueBallBody = null;
 let cueBallHitDirection = null;
 let previousPhysicsTime = 0;
 let arcadeScreenMaterial = null;
+let arcadeHtmlScreen = null;
 let tableLightPivot = null;
 let hangingLightPivot = null;
 let screen = null;
@@ -258,7 +260,38 @@ function updateCoinAnimation(time) {
   coinAnimation.coin.position.y = coinAnimation.startY - coinDropDistance * progress;
   coinAnimation.coin.rotation.z = coinAnimation.startRotationZ + Math.PI * 2 * progress;
 
-  if (progress === 1) coinAnimation = null;
+  if (progress === 1) {
+    coinAnimation = null;
+    showArcadeHtmlScreen();
+  }
+}
+
+function showArcadeHtmlScreen() {
+  if (!screen || arcadeHtmlScreen) return;
+
+  const pixelsPerUnit = 1000;
+  const surface = document.createElement('div');
+  surface.className = 'arcade-screen-surface';
+  surface.style.width = `${screen.geometry.parameters.width * pixelsPerUnit}px`;
+  surface.style.height = `${screen.geometry.parameters.height * pixelsPerUnit}px`;
+
+  const iframe = document.createElement('iframe');
+  iframe.src = '/arcadescreen.html';
+  iframe.title = 'Arcade screen';
+  iframe.className = 'arcade-screen-frame';
+  surface.appendChild(iframe);
+
+  screen.updateMatrixWorld(true);
+  arcadeHtmlScreen = new CSS3DObject(surface);
+  arcadeHtmlScreen.name = 'ArcadeHtmlScreen';
+  screen.getWorldPosition(arcadeHtmlScreen.position);
+  screen.getWorldQuaternion(arcadeHtmlScreen.quaternion);
+  screen.getWorldScale(arcadeHtmlScreen.scale).multiplyScalar(1 / pixelsPerUnit);
+  arcadeHtmlScene.add(arcadeHtmlScreen);
+
+  screen.visible = false;
+  arcadeScreenMaterial?.dispose();
+  arcadeScreenMaterial = null;
 }
 
 function importTubeLight() {
@@ -314,7 +347,37 @@ function importVendingMachine() {
 
       const materials = Array.isArray(child.material) ? child.material : [child.material];
       for (const material of materials) {
-        if (material.emissiveMap) material.emissiveIntensity = 1.35;
+        const sideEmissionMap = material.emissiveMap;
+        material.emissive.set(0xffffff);
+        material.emissiveMap = material.map;
+        material.emissiveIntensity = material.map ? 1.5 : 0;
+        // Keep the sign artwork bright and restore the original white edge lights.
+        material.onBeforeCompile = (shader) => {
+          shader.uniforms.vendingSideEmissionMap = { value: sideEmissionMap };
+          shader.uniforms.vendingSideEmissionIntensity = { value: sideEmissionMap ? 1.35 : 0 };
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <common>',
+            `#include <common>
+            uniform sampler2D vendingSideEmissionMap;
+            uniform float vendingSideEmissionIntensity;`
+          );
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <emissivemap_fragment>',
+            `#include <emissivemap_fragment>
+            #ifdef USE_EMISSIVEMAP
+              vec2 signMin = vec2(0.71213, 0.08507);
+              vec2 signMax = vec2(0.95319, 0.18671);
+              vec2 insideSign = step(signMin, vEmissiveMapUv)
+                * step(vEmissiveMapUv, signMax);
+              float signMask = insideSign.x * insideSign.y;
+              totalEmissiveRadiance *= signMask;
+              totalEmissiveRadiance += texture2D(vendingSideEmissionMap, vEmissiveMapUv).rgb
+                * vendingSideEmissionIntensity * (1.0 - signMask);
+            #endif`
+          );
+        };
+        material.customProgramCacheKey = () => 'vending-sign-and-side-emission';
+        material.needsUpdate = true;
       }
     });
 
@@ -340,6 +403,12 @@ composer.addPass(new UnrealBloomPass(
   3,
 ));
 composer.addPass(new OutputPass());
+
+const cssRenderer = new CSS3DRenderer();
+cssRenderer.setSize(window.innerWidth, window.innerHeight);
+cssRenderer.domElement.className = 'arcade-html-renderer';
+document.body.appendChild(cssRenderer.domElement);
+
 windowResponsiveResize();
 
 const raycaster = new THREE.Raycaster();
@@ -481,6 +550,7 @@ function animate( time ) {
     });
   }
   composer.render();
+  if (arcadeHtmlScreen) cssRenderer.render(arcadeHtmlScene, camera);
 }
 
 function updateTubeLightFlicker(time) {
@@ -596,6 +666,7 @@ function windowResponsiveResize()
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     composer.setSize(width, height);
+    cssRenderer.setSize(width, height);
 });
 }
 
@@ -606,7 +677,7 @@ function panCameratoScreen() {
   const screenCenter = screen.getWorldPosition(new THREE.Vector3());
   const screenNormal = screen.getWorldDirection(new THREE.Vector3()).normalize();
   const destination = screenCenter.clone()
-    .addScaledVector(screenNormal, 0.85)
+    .addScaledVector(screenNormal, 0.6)
     .add(new THREE.Vector3(0, 0.04, 0));
 
   cameraPan = {
