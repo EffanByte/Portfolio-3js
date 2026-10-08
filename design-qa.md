@@ -1,36 +1,54 @@
 # Arcade menu QA
 
-Final result: blocked
+Final result: passed for the local arcade-machine implementation.
 
-The working HTML menu is implemented and browser verification passed. The requested editable Figma design and a paired design-to-implementation comparison are pending the Figma connection.
+The colorful adventure menu is integrated into the existing 3D arcade cabinet. The user's latest instruction is to stop porting to Figma and use the menu directly in the machine.
 
-## Source and evidence
+## Design and implementation
 
-- Source visual truth: the user's hand-drawn menu photo attached in this conversation; no local source image path was exposed. It specifies Projects, Experience, About Me and Contact in one row. The accompanying brief specifies a modern light blue pixel theme and a floating animation.
-- Implementation: `public/arcadescreen.html`, preview at `http://127.0.0.1:5173/arcadescreen.html`.
-- Screenshots: `design/arcade-menu/arcade-menu-610x530.png`, `design/arcade-menu/arcade-menu-390x700.png`, and `design/arcade-menu/arcade-menu-in-cabinet.png`.
-- CSS viewports and screenshot dimensions: 610 × 530, 390 × 700, and 945 × 532, respectively. Each was captured at deviceScaleFactor 1 in headless Chrome, without browser chrome. The 3D scene screenshot includes the physical arcade cabinet.
-- State: Projects selected; the menu's gentle float animation is running. Assets and the local font finished loading before capture. The cabinet capture follows the existing two-second coin animation.
-- Density normalization: implementation screenshots are 1:1 CSS pixels. The sketch has no defined CSS viewport or pixel-density specification. A combined normalized source/implementation input has not been captured, so no formal fidelity pass is claimed.
-- Full-view and focused comparison: pending a captured Figma source frame. The four icon/label tiles should be compared separately in addition to the full screen, since the cabinet projection is too small for detailed typography review.
+- Four requested sections remain in order: Projects, Experience, About Me and Contact.
+- Original colorful pixel artwork replaces the monochrome icons: globe, open journal, microphone and telephone.
+- A bright meadow and cloud background, warm beveled cards, gold selection accents and a dialogue bar follow the requested whimsical fantasy direction.
+- Cards bob independently; their artwork floats and tilts. Hover lifts a card and enlarges its icon. Activation adds a short bounce and sparkle burst.
+- Local Pixelify Sans and licensed Pixelarticons controls are served with the page. Reduced-motion preferences disable animation.
+- Implementation: `public/arcadescreen.html`, `public/arcade-menu.css`, `public/arcade-menu.js` and `public/arcade-assets/adventure-*.png`.
+- Integration: `main.js` loads `/arcadescreen.html` onto the cabinet's CSS3D screen as soon as the machine loads. The artwork is visible immediately. The existing coin animation remains available and reuses this screen.
 
-## Implementation review
+## Evidence
 
-- Typography: locally served Pixelify Sans, variable weights 400–700. All labels fit within the actual 610px arcade viewport; Experience uses 19px type. The handwritten sketch's lettering is intentionally replaced to follow the requested pixel theme.
-- Layout: four equal tiles at the arcade viewport; two columns on narrow screens. The panel has crisp borders and offset shadows, plus an 8px vertical float over 4.8 seconds. Short mobile screens can scroll rather than hide the controls.
-- Colors: icy blue background, pale blue panels, navy foreground, and a darker blue selected tile. Palette choices follow the text brief; they are not sampled from the photograph.
-- Assets: unmodified MIT Pixelarticons SVGs for globe, article, microphone and phone, tinted through CSS masks and displayed at 48px. The ambiguous About Me sketch was interpreted as a microphone. No handmade icon replacements or generated raster images were used.
-- Copy: the four requested labels and their order are retained. Added interface copy consists of a greeting, portfolio/credit status, section summaries, and keyboard hints. The buttons select a section and emit `arcademenu:select`; destination pages are outside this menu task.
+All screenshots use headless Chrome at deviceScaleFactor 1, without browser chrome. Assets and fonts finished loading before capture.
 
-## Verification and refinement history
+- `design/arcade-menu/adventure-menu-610x530.png`: actual arcade viewport, Projects selected, reduced motion enabled for a stable capture.
+- `design/arcade-menu/adventure-menu-hover-610x530.png`: actual mouse hover over a card.
+- `design/arcade-menu/adventure-menu-390x700.png`: narrow-screen two-column layout.
+- `design/arcade-menu/adventure-menu-in-cabinet.png`: 945 x 532 scene showing the artwork on the cabinet display.
+- `design/arcade-menu/adventure-browser-geometry.json`: measured browser layout.
+- `design/arcade-menu/adventure-browser-verification.json`: browser behavior results.
+- `design/arcade-menu/adventure-cabinet-verification.json`: immediate artwork visibility and pointer-input results.
 
-1. Layout measurement found Experience exceeded its padded tile width by about 2px. Reduced desktop menu labels from 20px to 19px. Final measurements show 104.30px text inside 108px available content width. Final 610 × 530 capture records the correction.
-2. Narrow-screen review found the decorative footer message wrapped awkwardly. Removed that message at the narrow breakpoint and recaptured the 390 × 700 state after transitions settled. Controls now remain on one line.
-3. Final browser verification passed: arrow-key focus and selection, native Enter activation, previous/next buttons, reduced-motion animation disabling, mobile grid, no clipping at the arcade viewport, the coin-to-HTML transition, and actual pointer hit testing through the projected iframe. No browser console errors were recorded.
-4. `npx vite build` passed. The pre-existing large Three.js bundle warning remains.
+## Verification
 
-These are implementation refinements, not paired source-image comparison iterations.
+- All images loaded; labels fit and the 610 x 530 viewport has no clipping.
+- Arrow-key selection, native Enter activation, End, previous/next controls and dialogue updates passed.
+- Independent animation timing, hover enlargement, selection bounce and sparkle particles passed.
+- Reduced motion disables animations. The mobile grid has no horizontal clipping and vertical arrow navigation moves by one row.
+- The artwork is attached to the screen and noise rendering has stopped before a coin is inserted. Inserting a coin preserves the single screen. A real mouse click reaches Contact through the projected iframe.
+- No browser console errors were recorded.
+- `npx.cmd vite build` passed. The existing large Three.js bundle warning remains.
 
-## Remaining work
+The saved verification scripts reproduce the local checks. Existing blue-design Figma comparisons are historical artifacts and do not evaluate this revision. Further Figma porting was stopped at the user's request.
 
-Connect Figma to Codex, create the editable source frame, capture it, and compare it with the rendered page in the same normalized comparison input before changing the final result to passed.
+## Projects flow
+
+The user's two additional sketches specify a grid of GIF cards followed by a detail view with the selected GIF at the left, explanatory text beside it, and more text below. The implementation keeps this arrangement at the arcade viewport, preserving the existing colorful theme.
+
+- Activating Projects opens the three files in `public/project-gifs`: Water Renderer, Starship Sling and Reinforcement Learning Trained AI Agent. Their complete filenames, without extensions, are the card titles.
+- Every GIF uses `object-fit: contain` to preserve the complete landscape or portrait preview. The original files are unchanged. Previews are created only when the Projects grid first opens.
+- Each card opens its matching GIF, category, title, summary and two explanatory paragraphs. Copy is editable in `public/arcade-projects.js`; the initial draft uses filenames and visible demo content without adding unverified technologies or metrics.
+- All three cards and all three full explanations fit the 610 x 530 display. Header, back controls, complete names and footer are visible. The final visual check corrected crowded detail text and a low-contrast gallery caption.
+- Native mouse clicks, Enter activation, arrow keys, Home/End, previous/next wrapping and Escape navigation passed. Going back restores the selected card and focus.
+- At 390 x 700, the grid becomes one column and the detail view stacks the GIF above its text. Keyboard navigation scrolls the focused card into view; all explanatory text is reachable without horizontal clipping.
+- The original home-menu checks still pass. UI animations are disabled under reduced motion; native GIF playback remains available.
+- Real mouse clicks through the cabinet's projected iframe open Projects and the Water Renderer detail view. `projects-grid-in-cabinet.png` and `project-detail-in-cabinet.png` capture these states; the cabinet verification reports no errors.
+- `design/arcade-menu/projects-verification.json` records the checks; `verify-projects.cjs` reproduces them. Gallery, individual detail and mobile screenshots are saved alongside it.
+- The production build passes with the existing Three.js chunk-size warning.

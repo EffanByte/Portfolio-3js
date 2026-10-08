@@ -1,0 +1,57 @@
+[
+  {
+    "asset": "adventure-globe.png",
+    "targetNodeId": "16:189",
+    "result": {
+      "success": true,
+      "imageHash": "c756037de66476df24a808ec6da164dd767094e9",
+      "sizeBytes": 1288700,
+      "contentType": "image/png",
+      "placedOnNodeId": "16:189"
+    }
+  },
+  {
+    "asset": "adventure-journal.png",
+    "targetNodeId": "16:191",
+    "result": {
+      "success": true,
+      "imageHash": "9957bb325b5aeb23a6689880c911573812531279",
+      "sizeBytes": 1222002,
+      "contentType": "image/png",
+      "placedOnNodeId": "16:191"
+    }
+  },
+  {
+    "asset": "adventure-microphone.png",
+    "targetNodeId": "16:193",
+    "result": {
+      "success": true,
+      "imageHash": "c32011432542a8739455bee2ad9028c28cc37ef5",
+      "sizeBytes": 677632,
+      "contentType": "image/png",
+      "placedOnNodeId": "16:193"
+    }
+  },
+  {
+    "asset": "adventure-telephone.png",
+    "targetNodeId": "16:195",
+    "result": {
+      "success": true,
+      "imageHash": "e011e2b1a29389903237a55c409c46032cbaaf29",
+      "sizeBytes": 1017976,
+      "contentType": "image/png",
+      "placedOnNodeId": "16:195"
+    }
+  },
+  {
+    "asset": "adventure-world.png",
+    "targetNodeId": "16:197",
+    "result": {
+      "success": true,
+      "imageHash": "99472b8c1cfffbaf277baf1068f686e5e06cc0dd",
+      "sizeBytes": 1514095,
+      "contentType": "image/png",
+      "placedOnNodeId": "16:197"
+    }
+  }
+]

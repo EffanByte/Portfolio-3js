@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "artworkVisibleBeforeCoin": true,
+  "pointerHitTesting": true,
+  "projectsNavigation": true,
+  "screen": {
+    "ready": true,
+    "artworkVisible": true,
+    "noiseStopped": true,
+    "coinStarted": true,
+    "screenWidth": 610,
+    "screenHeight": 530
+  },
+  "projection": {
+    "x": 597.5966127114218,
+    "y": 273.1481057337995,
+    "projectedWidth": 354.5130920410156,
+    "projectedHeight": 299.3534851074219
+  },
+  "errors": []
+}

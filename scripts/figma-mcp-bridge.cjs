@@ -52,17 +52,30 @@ const cli = path.join(process.env.APPDATA, 'npm', 'node_modules', '@openai', 'co
   try {
     await request('initialize', { clientInfo: { name: 'portfolio_figma_setup', title: 'Portfolio Figma Setup', version: '1.0' }, capabilities: { experimentalApi: true } });
     server.stdin.write(JSON.stringify({ method: 'initialized', params: {} }) + '\n');
-    const status = await request('mcpServerStatus/list', { limit: 100 });
-    const figma = status.data?.find(item => item.name === 'figma');
+    let figma;
+    try { figma = JSON.parse(await fs.readFile('scripts/figma-tools.json', 'utf8')); }
+    catch {
+      const status = await request('mcpServerStatus/list', { limit: 100 });
+      figma = status.data?.find(item => item.name === 'figma');
+    }
     if (!figma) throw new Error('Figma was not returned by the MCP server status request.');
     await fs.writeFile('scripts/figma-tools.json', JSON.stringify({ authStatus:figma.authStatus, tools:figma.tools, resources:figma.resources }, null, 2));
     console.log('Figma connection:', figma.authStatus, 'Tools:', Object.keys(figma.tools));
     const input = readline.createInterface({ input: process.stdin });
     for await (const line of input) {
       try {
-        const command = JSON.parse(line);
+        let command = JSON.parse(line);
+        if (command.fromFile) command = JSON.parse(await fs.readFile(command.fromFile, 'utf8'));
         if (command.method === 'exit') break;
-        console.log('RESULT', JSON.stringify(await request(command.method, command.params)));
+        const result = await request(command.method, command.params);
+        if (command.saveText) {
+          await fs.writeFile(command.saveText, (result.contents || result.content || []).map(item => item.text || '').join('\n'));
+          console.log('SAVED', command.saveText);
+        } else if (command.saveJson) {
+          await fs.writeFile(command.saveJson, JSON.stringify(result, null, 2));
+          console.log('SAVED', command.saveJson);
+        } else if (command.method === 'thread/start') console.log('THREAD', result.thread.id);
+        else console.log('RESULT', JSON.stringify(result));
       } catch (error) { console.log('ERROR', error.message); }
     }
   } finally {

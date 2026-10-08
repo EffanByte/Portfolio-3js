@@ -3,338 +3,123 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Effan's Arcade Menu</title>
-    <style>
-      @font-face {
-        font-family: "Pixelify Sans";
-        src: url("/arcade-assets/PixelifySans.ttf") format("truetype");
-        font-style: normal;
-        font-weight: 400 700;
-        font-display: swap;
-      }
-
-      :root {
-        color-scheme: light;
-        --ink: #163c5b;
-        --muted: #466b85;
-        --sky: #bfe3f7;
-        --paper: #effaff;
-        --blue: #306da0;
-        --ice: #d8efff;
-      }
-
-      * { box-sizing: border-box; }
-      html, body { margin: 0; width: 100%; height: 100%; }
-      body {
-        overflow: hidden;
-        background: var(--sky);
-        color: var(--ink);
-        font-family: "Pixelify Sans", "Courier New", monospace;
-      }
-      button { font: inherit; }
-      button, a { -webkit-tap-highlight-color: transparent; }
-      .screen {
-        display: flex;
-        flex-direction: column;
-        width: min(100%, 800px);
-        height: 100%;
-        min-height: 420px;
-        margin: auto;
-        padding: 24px;
-      }
-      .status-bar, .screen-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        font-size: 17px;
-        font-weight: 500;
-      }
-      .identity { display: flex; align-items: center; gap: 10px; }
-      .identity span:last-child { color: var(--muted); }
-      .credit {
-        padding: 5px 10px;
-        border: 2px solid var(--ink);
-        background: var(--paper);
-        box-shadow: 2px 2px 0 var(--ink);
-        white-space: nowrap;
-        font-size: 15px;
-      }
-      main {
-        display: grid;
-        place-items: center;
-        flex: 1;
-        min-height: 0;
-        padding: 22px 0;
-      }
-      .menu-panel {
-        width: 100%;
-        padding: 24px 20px 18px;
-        border: 3px solid var(--ink);
-        background: var(--paper);
-        box-shadow: 6px 6px 0 var(--ink), 11px 11px 0 #9ec9e3;
-        animation: float 4.8s ease-in-out infinite;
-      }
-      .panel-heading {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-      }
-      .eyebrow {
-        margin: 0 0 4px;
-        color: var(--muted);
-        font-size: 14px;
-        font-weight: 500;
-        letter-spacing: 2px;
-      }
-      h1 { margin: 0; font-size: clamp(32px, 6.6vw, 46px); font-weight: 600; line-height: 1.05; }
-      .heading-sparkle { width: 48px; height: 48px; color: #6caad1; flex-shrink: 0; }
-      .menu-grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 24px;
-      }
-      .menu-item {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        min-width: 0;
-        height: 134px;
-        padding: 14px 4px 12px;
-        border: 2px solid var(--ink);
-        background: var(--ice);
-        color: var(--ink);
-        box-shadow: 3px 3px 0 #8fb7d2;
-        cursor: pointer;
-        transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
-      }
-      .menu-item[aria-pressed="true"] {
-        background: var(--blue);
-        color: var(--paper);
-        box-shadow: 3px 3px 0 var(--ink);
-      }
-      .menu-item:hover { transform: translateY(-5px); box-shadow: 3px 8px 0 #8fb7d2; }
-      .menu-item[aria-pressed="true"]:hover { box-shadow: 3px 8px 0 var(--ink); }
-      .menu-item:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
-      .menu-item:focus-visible, .step-button:focus-visible {
-        outline: 3px solid #163c5b;
-        outline-offset: 5px;
-      }
-      .menu-item.is-confirmed { animation: select-pop 260ms ease; }
-      .item-number { position: absolute; top: 7px; left: 8px; font-size: 12px; opacity: .7; }
-      .icon {
-        display: inline-block;
-        width: 48px;
-        height: 48px;
-        background: currentColor;
-        -webkit-mask: var(--icon) center / contain no-repeat;
-        mask: var(--icon) center / contain no-repeat;
-        flex-shrink: 0;
-      }
-      .menu-label { font-size: 19px; font-weight: 500; line-height: 1; white-space: nowrap; }
-      .selection-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        margin-top: 22px;
-        padding-top: 14px;
-        border-top: 2px solid #b7d8eb;
-      }
-      .selection-copy { margin: 0; font-size: 18px; line-height: 1.2; }
-      .selection-copy span { color: var(--muted); }
-      .step-controls { display: flex; align-items: center; gap: 8px; }
-      .position { min-width: 44px; text-align: center; color: var(--muted); font-size: 15px; }
-      .step-button {
-        display: grid;
-        place-items: center;
-        width: 30px;
-        height: 30px;
-        padding: 0;
-        border: 2px solid var(--ink);
-        background: var(--ice);
-        color: var(--ink);
-        box-shadow: 2px 2px 0 #8fb7d2;
-        cursor: pointer;
-      }
-      .step-button:hover { background: #c0e3fa; }
-      .step-button:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 #8fb7d2; }
-      .step-button .icon { width: 24px; height: 24px; }
-      .screen-footer { color: var(--muted); font-size: 15px; }
-      .keyboard-help { display: flex; align-items: center; gap: 5px; }
-      .keyboard-help .icon { width: 24px; height: 24px; }
-      kbd { padding: 1px 5px; border: 1px solid #608aa5; background: #d9effb; font: inherit; }
-      .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip-path: inset(50%);
-        white-space: nowrap;
-        border: 0;
-      }
-      @keyframes float { 0%, 100% { transform: translateY(4px); } 50% { transform: translateY(-4px); } }
-      @keyframes select-pop { 50% { transform: translateY(-6px); } }
-      @media (max-width: 480px) {
-        body { overflow-y: auto; }
-        .screen { padding: 18px; min-height: 560px; }
-        .menu-panel { padding: 18px 16px 14px; }
-        .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
-        .menu-item { height: 104px; gap: 8px; }
-        .menu-label { font-size: 20px; }
-        .selection-copy { font-size: 16px; }
-        .selection-bar { gap: 8px; margin-top: 18px; }
-        .position { display: none; }
-        .step-controls { gap: 6px; }
-        .heading-sparkle { width: 24px; height: 24px; }
-        .status-bar { font-size: 15px; }
-        .screen-footer { font-size: 14px; gap: 8px; }
-        .screen-footer > span:last-child { display: none; }
-      }
-      @media (max-height: 460px) and (min-width: 481px) {
-        .screen { min-height: 320px; padding: 16px 24px; }
-        main { padding: 14px 0; }
-        .menu-panel { padding-top: 16px; padding-bottom: 14px; }
-        .menu-grid { margin-top: 16px; }
-        .menu-item { height: 110px; gap: 8px; }
-        .selection-bar { margin-top: 16px; padding-top: 10px; }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .menu-panel, .menu-item.is-confirmed { animation: none; }
-        .menu-item { transition: none; }
-      }
-    </style>
+    <title>Effan's Little World</title>
+    <link rel="stylesheet" href="/arcade-menu.css">
+    <script src="/arcade-projects.js" defer></script>
+    <script src="/arcade-menu.js" defer></script>
   </head>
   <body>
+    <div class="ambient" aria-hidden="true">
+      <span class="icon mote" style="--icon: url('/arcade-assets/sparkle.svg')"></span>
+      <span class="icon mote" style="--icon: url('/arcade-assets/sparkle.svg')"></span>
+      <span class="icon mote" style="--icon: url('/arcade-assets/sparkle.svg')"></span>
+      <span class="icon mote" style="--icon: url('/arcade-assets/sparkle.svg')"></span>
+      <span class="icon mote" style="--icon: url('/arcade-assets/sparkle.svg')"></span>
+    </div>
     <div class="screen">
       <header class="status-bar">
         <div class="identity"><strong>EFFAN</strong><span>/ PORTFOLIO</span></div>
-        <span class="credit">1 CREDIT</span>
+        <span class="credit"><span class="icon" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>1 CREDIT</span>
       </header>
-
       <main>
-        <section class="menu-panel" aria-labelledby="menu-title">
+        <section class="menu-panel" id="menu-view" aria-labelledby="menu-title">
           <div class="panel-heading">
-            <div>
-              <p class="eyebrow">CHOOSE YOUR PATH</p>
-              <h1 id="menu-title">Hello, player.</h1>
-            </div>
-            <span class="icon heading-sparkle" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>
+            <p class="eyebrow">A LITTLE WORLD BY EFFAN</p>
+            <h1 id="menu-title">Choose your adventure.</h1>
+            <p class="intro">Good stories start with a little curiosity.</p>
           </div>
-
           <nav class="menu-grid" aria-label="Portfolio sections">
-            <button class="menu-item" type="button" data-section="projects" aria-pressed="true" tabindex="0">
-              <span class="item-number" aria-hidden="true">01</span>
-              <span class="icon" style="--icon: url('/arcade-assets/globe.svg')" aria-hidden="true"></span>
-              <span class="menu-label">Projects</span>
-            </button>
-            <button class="menu-item" type="button" data-section="experience" aria-pressed="false" tabindex="-1">
-              <span class="item-number" aria-hidden="true">02</span>
-              <span class="icon" style="--icon: url('/arcade-assets/article.svg')" aria-hidden="true"></span>
-              <span class="menu-label">Experience</span>
-            </button>
-            <button class="menu-item" type="button" data-section="about" aria-pressed="false" tabindex="-1">
-              <span class="item-number" aria-hidden="true">03</span>
-              <span class="icon" style="--icon: url('/arcade-assets/mic.svg')" aria-hidden="true"></span>
-              <span class="menu-label">About Me</span>
-            </button>
-            <button class="menu-item" type="button" data-section="contact" aria-pressed="false" tabindex="-1">
-              <span class="item-number" aria-hidden="true">04</span>
-              <span class="icon" style="--icon: url('/arcade-assets/phone.svg')" aria-hidden="true"></span>
-              <span class="menu-label">Contact</span>
-            </button>
+            <div class="card-float">
+              <button class="menu-item" type="button" data-section="projects" aria-pressed="true" tabindex="0">
+                <span class="item-number" aria-hidden="true">01</span>
+                <span class="icon selected-mark" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>
+                <img class="item-sprite" src="/arcade-assets/adventure-globe.png" alt="" width="80" height="80">
+                <span class="menu-label">Projects</span>
+                <span class="item-caption">build &amp; explore</span>
+              </button>
+            </div>
+            <div class="card-float">
+              <button class="menu-item" type="button" data-section="experience" aria-pressed="false" tabindex="-1">
+                <span class="item-number" aria-hidden="true">02</span>
+                <span class="icon selected-mark" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>
+                <img class="item-sprite" src="/arcade-assets/adventure-journal.png" alt="" width="80" height="80">
+                <span class="menu-label">Experience</span>
+                <span class="item-caption">the quest so far</span>
+              </button>
+            </div>
+            <div class="card-float">
+              <button class="menu-item" type="button" data-section="about" aria-pressed="false" tabindex="-1">
+                <span class="item-number" aria-hidden="true">03</span>
+                <span class="icon selected-mark" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>
+                <img class="item-sprite" src="/arcade-assets/adventure-microphone.png" alt="" width="80" height="80">
+                <span class="menu-label">About Me</span>
+                <span class="item-caption">meet the player</span>
+              </button>
+            </div>
+            <div class="card-float">
+              <button class="menu-item" type="button" data-section="contact" aria-pressed="false" tabindex="-1">
+                <span class="item-number" aria-hidden="true">04</span>
+                <span class="icon selected-mark" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>
+                <img class="item-sprite" src="/arcade-assets/adventure-telephone.png" alt="" width="80" height="80">
+                <span class="menu-label">Contact</span>
+                <span class="item-caption">say hello</span>
+              </button>
+            </div>
           </nav>
-
           <div class="selection-bar">
-            <p class="selection-copy"><span id="section-description">Things I've built.</span></p>
+            <div class="selection-message">
+              <img class="dialogue-sprite" id="dialogue-sprite" src="/arcade-assets/adventure-globe.png" alt="" width="32" height="32">
+              <p class="selection-copy"><span class="selected-name" id="selected-name">Projects</span><span id="section-description">Things I've built, one little quest at a time.</span></p>
+            </div>
             <div class="step-controls">
-              <button class="step-button" id="previous" type="button" aria-label="Previous section">
-                <span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span>
-              </button>
+              <button class="step-button" id="previous" type="button" aria-label="Previous section"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span></button>
               <span class="position" id="position" aria-hidden="true">01 / 04</span>
-              <button class="step-button" id="next" type="button" aria-label="Next section">
-                <span class="icon" style="--icon: url('/arcade-assets/chevron-right.svg')" aria-hidden="true"></span>
-              </button>
+              <button class="step-button" id="next" type="button" aria-label="Next section"><span class="icon" style="--icon: url('/arcade-assets/chevron-right.svg')" aria-hidden="true"></span></button>
             </div>
           </div>
           <p class="sr-only" id="selection-announcement" aria-live="polite" aria-atomic="true"></p>
         </section>
+        <section class="project-panel" id="projects-view" aria-labelledby="projects-title" hidden>
+          <div class="view-toolbar">
+            <button class="back-button" id="back-to-menu" type="button"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span>Menu</button>
+            <span class="view-location">PORTFOLIO / PROJECTS</span>
+          </div>
+          <div class="panel-heading project-heading">
+            <p class="eyebrow">THE PROJECT JOURNAL</p>
+            <h2 id="projects-title">Little builds. Big adventures.</h2>
+            <p class="intro">Pick a project and see its story unfold.</p>
+          </div>
+          <div class="project-grid" id="project-grid" role="group" aria-label="Projects"></div>
+          <p class="project-grid-note"><span class="icon" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>Three projects, each with a story to tell.</p>
+        </section>
+        <section class="project-panel" id="project-detail-view" aria-labelledby="project-title" hidden>
+          <div class="view-toolbar">
+            <button class="back-button" id="back-to-projects" type="button"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span>Projects</button>
+            <div class="step-controls">
+              <button class="step-button" id="previous-project" type="button" aria-label="Previous project"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span></button>
+              <span class="project-position" id="project-position">01 / 03</span>
+              <button class="step-button" id="next-project" type="button" aria-label="Next project"><span class="icon" style="--icon: url('/arcade-assets/chevron-right.svg')" aria-hidden="true"></span></button>
+            </div>
+          </div>
+          <article class="project-detail-scroll" tabindex="0" aria-label="Project explanation">
+            <div class="project-detail-overview">
+              <figure class="project-detail-preview"><img id="project-gif" alt="" decoding="async"></figure>
+              <div class="project-detail-heading">
+                <p class="eyebrow" id="project-category"></p>
+                <h2 id="project-title" tabindex="-1"></h2>
+                <p class="project-summary" id="project-summary"></p>
+              </div>
+            </div>
+            <div class="project-story" id="project-story"></div>
+          </article>
+        </section>
+        <p class="sr-only" id="view-announcement" aria-live="polite" aria-atomic="true"></p>
       </main>
-
       <footer class="screen-footer">
-        <span class="keyboard-help">
-          <span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span>
-          <span class="icon" style="--icon: url('/arcade-assets/chevron-right.svg')" aria-hidden="true"></span>
-          choose
-        </span>
-        <span><kbd>Enter</kbd> to select</span>
-        <span>TAKE A LOOK AROUND</span>
+        <span class="keyboard-help"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span><span class="icon" style="--icon: url('/arcade-assets/chevron-right.svg')" aria-hidden="true"></span>to explore</span>
+        <span id="select-help"><kbd>Enter</kbd> to select</span>
+        <span id="back-help" hidden><kbd>Esc</kbd> to go back</span>
       </footer>
     </div>
-
-    <script>
-      const items = [...document.querySelectorAll('.menu-item')];
-      const descriptions = [
-        "Things I've built.",
-        'My journey so far.',
-        'Meet the person behind the pixels.',
-        "Let's start a conversation."
-      ];
-      let selectedIndex = 0;
-
-      function choose(index, moveFocus = false) {
-        selectedIndex = (index + items.length) % items.length;
-        items.forEach((item, itemIndex) => {
-          const selected = itemIndex === selectedIndex;
-          item.setAttribute('aria-pressed', String(selected));
-          item.tabIndex = selected ? 0 : -1;
-          item.classList.remove('is-confirmed');
-        });
-        document.getElementById('section-description').textContent = descriptions[selectedIndex];
-        document.getElementById('position').textContent = `${String(selectedIndex + 1).padStart(2, '0')} / 04`;
-        document.getElementById('selection-announcement').textContent = `${items[selectedIndex].querySelector('.menu-label').textContent} selected.`;
-        if (moveFocus) items[selectedIndex].focus({ preventScroll: true });
-      }
-
-      function activate(index) {
-        choose(index);
-        const item = items[selectedIndex];
-        // Restart the brief selection animation, including repeated selections.
-        void item.offsetWidth;
-        item.classList.add('is-confirmed');
-        window.dispatchEvent(new CustomEvent('arcademenu:select', {
-          detail: { section: item.dataset.section }
-        }));
-      }
-
-      items.forEach((item, index) => {
-        item.addEventListener('click', () => activate(index));
-        item.addEventListener('animationend', () => item.classList.remove('is-confirmed'));
-        item.addEventListener('keydown', (event) => {
-          const columns = window.matchMedia('(max-width: 480px)').matches ? 2 : 4;
-          const destinations = {
-            ArrowLeft: selectedIndex - 1,
-            ArrowRight: selectedIndex + 1,
-            ArrowUp: selectedIndex - columns,
-            ArrowDown: selectedIndex + columns,
-            Home: 0,
-            End: items.length - 1
-          };
-          if (Object.hasOwn(destinations, event.key)) {
-            event.preventDefault();
-            choose(destinations[event.key], true);
-          }
-        });
-      });
-      document.getElementById('previous').addEventListener('click', () => choose(selectedIndex - 1));
-      document.getElementById('next').addEventListener('click', () => choose(selectedIndex + 1));
-    </script>
   </body>
 </html>

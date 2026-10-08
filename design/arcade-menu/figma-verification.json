@@ -1,0 +1,761 @@
+{
+  "fileKey": "rF03tHgyMtWAYSFKvrds0t",
+  "pageId": "0:1",
+  "pageName": "Pixel arcade menu",
+  "primaryFrameId": "4:73",
+  "counts": {
+    "FRAME": 169,
+    "COMPONENT": 11,
+    "VECTOR": 96,
+    "COMPONENT_SET": 1,
+    "INSTANCE": 108,
+    "TEXT": 160,
+    "RECTANGLE": 8
+  },
+  "fonts": [
+    "Pixelify Sans"
+  ],
+  "screens": [
+    {
+      "id": "4:73",
+      "name": "Arcade menu / Projects / Float down",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 224,
+        "y": 104.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:145",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:217",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:361",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:505",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:145",
+      "name": "Arcade menu / Projects / Float up",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 224,
+        "y": 676.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:73",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:289",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:433",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:577",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:217",
+      "name": "Arcade menu / Experience / Float down",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 934,
+        "y": 104.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:289",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:73",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:361",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:505",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:289",
+      "name": "Arcade menu / Experience / Float up",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 934,
+        "y": 676.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:217",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:145",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:433",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:577",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:361",
+      "name": "Arcade menu / About Me / Float down",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 1644,
+        "y": 104.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:433",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:73",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:217",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:505",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:433",
+      "name": "Arcade menu / About Me / Float up",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 1644,
+        "y": 676.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:361",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:145",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:289",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:577",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:505",
+      "name": "Arcade menu / Contact / Float down",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 2354,
+        "y": 104.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:577",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:73",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:217",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:361",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:577",
+      "name": "Arcade menu / Contact / Float up",
+      "width": 610,
+      "height": 530,
+      "panel": {
+        "x": 2354,
+        "y": 676.3671875,
+        "width": 562,
+        "height": 337.265625
+      },
+      "float": [
+        {
+          "trigger": "AFTER_TIMEOUT",
+          "timeout": 0.0010000000474974513,
+          "actions": [
+            {
+              "destination": "4:505",
+              "navigation": "NAVIGATE",
+              "duration": 2.4000000953674316,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ],
+      "labels": [
+        {
+          "text": "Projects",
+          "width": 88,
+          "fontSize": 19
+        },
+        {
+          "text": "Experience",
+          "width": 105,
+          "fontSize": 19
+        },
+        {
+          "text": "About Me",
+          "width": 87,
+          "fontSize": 19
+        },
+        {
+          "text": "Contact",
+          "width": 81,
+          "fontSize": 19
+        }
+      ],
+      "clicks": [
+        {
+          "name": "Menu item / Projects",
+          "actions": [
+            {
+              "destination": "4:145",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Experience",
+          "actions": [
+            {
+              "destination": "4:289",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / About Me",
+          "actions": [
+            {
+              "destination": "4:433",
+              "navigation": "NAVIGATE"
+            }
+          ]
+        },
+        {
+          "name": "Menu item / Contact",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "tileVariants": [
+    {
+      "id": "4:46",
+      "name": "State=Default",
+      "reactions": [
+        {
+          "trigger": "ON_HOVER",
+          "actions": [
+            {
+              "destination": "4:52",
+              "navigation": "CHANGE_TO",
+              "duration": 0.1599999964237213,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:52",
+      "name": "State=Hover",
+      "reactions": []
+    },
+    {
+      "id": "4:58",
+      "name": "State=Selected",
+      "reactions": [
+        {
+          "trigger": "ON_HOVER",
+          "actions": [
+            {
+              "destination": "4:64",
+              "navigation": "CHANGE_TO",
+              "duration": 0.1599999964237213,
+              "type": "SMART_ANIMATE"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:64",
+      "name": "State=Selected hover",
+      "reactions": []
+    }
+  ],
+  "imageCount": 0,
+  "flowStartingPoints": [
+    {
+      "nodeId": "4:73",
+      "name": "Floating arcade menu"
+    }
+  ]
+}

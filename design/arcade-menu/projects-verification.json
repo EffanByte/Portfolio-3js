@@ -1,0 +1,19 @@
+{
+  "passed": true,
+  "checks": [
+    "Projects opens a three-card GIF gallery",
+    "GIF filenames are the project titles",
+    "Gallery and complete titles fit 610 x 530",
+    "GIFs load only when Projects opens",
+    "Each card opens its matching GIF and explanation",
+    "Detail focus and Escape restore the selected card",
+    "Arrow keys and Enter open a project",
+    "Previous/next project controls wrap",
+    "Back buttons return to the menu",
+    "Mobile gallery has no horizontal clipping",
+    "Mobile keyboard focus scrolls into view",
+    "All detail text is reachable on mobile",
+    "Reduced motion disables UI animations"
+  ],
+  "errors": []
+}

@@ -101,6 +101,7 @@ loadGLTF('/arcade-machine/Arcade_Machine.glb', (arcadeModel) => {
   arcadeScreenMaterial = noiseMaterial;
   screen.material = noiseMaterial;
   scene.add(screen);
+  showArcadeHtmlScreen();
 
   const screenLight = new THREE.PointLight(0x8adfff, 0.5, 1, 4);
   screenLight.position.copy(screenPosition).add(new THREE.Vector3(0.35, 0.05, 0));
