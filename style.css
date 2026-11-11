@@ -7,11 +7,88 @@ html, body {
    height: 100%;
    display: block;
 }
+.progress-note {
+   position: fixed;
+   z-index: 2;
+   top: 14px;
+   right: 16px;
+   margin: 0;
+   color: #e7ece4;
+   font: 600 10px/1.2 system-ui, sans-serif;
+   letter-spacing: 0.08em;
+   text-align: right;
+   text-transform: uppercase;
+   text-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
+   pointer-events: none;
+}
 .arcade-html-renderer {
    position: fixed;
    inset: 0;
    z-index: 1;
    pointer-events: none;
+}
+.zoom-out-button {
+   position: fixed;
+   z-index: 3;
+   right: 20px;
+   bottom: 20px;
+   display: grid;
+   width: 42px;
+   height: 42px;
+   place-items: center;
+   padding: 9px;
+   border: 1px solid rgba(231, 236, 228, 0.55);
+   border-radius: 50%;
+   background: rgba(12, 16, 15, 0.78);
+   color: #e7ece4;
+   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.45);
+   cursor: pointer;
+}
+.zoom-out-button[hidden] {
+   display: none;
+}
+.zoom-out-button:hover {
+   background: rgba(37, 49, 42, 0.95);
+}
+.zoom-out-button:focus-visible {
+   outline: 2px solid #d7ed91;
+   outline-offset: 3px;
+}
+.zoom-out-button svg {
+   width: 100%;
+   height: 100%;
+   fill: none;
+   stroke: currentColor;
+   stroke-linecap: round;
+   stroke-linejoin: round;
+   stroke-width: 1.8;
+}
+.interaction-hint {
+   position: fixed;
+   z-index: 2;
+   width: 4px;
+   height: 24px;
+   transform: translate(-50%, -100%);
+   background: #d7ed91;
+   border-radius: 2px;
+   box-shadow: 0 0 10px rgba(215, 237, 145, 0.9);
+   pointer-events: none;
+   animation: interaction-hint-float 1.2s ease-in-out infinite;
+}
+.interaction-hint::after {
+   position: absolute;
+   bottom: 0;
+   left: 50%;
+   width: 0;
+   height: 0;
+   border-top: 9px solid #d7ed91;
+   border-right: 8px solid transparent;
+   border-left: 8px solid transparent;
+   content: "";
+   transform: translate(-50%, 2px);
+}
+@keyframes interaction-hint-float {
+   50% { margin-top: -5px; }
 }
 .arcade-screen-frame {
    display: block;
@@ -46,4 +123,111 @@ html, body {
    margin: 0;
    accent-color: #c5e77b;
    cursor: pointer;
+}
+.film-grain-panel {
+   position: fixed;
+   z-index: 2;
+   top: 16px;
+   right: 16px;
+   width: min(268px, calc(100vw - 48px));
+   max-height: calc(100vh - 32px);
+   overflow-y: auto;
+   border: 1px solid rgba(213, 225, 207, 0.2);
+   border-radius: 8px;
+   background: rgba(12, 16, 15, 0.88);
+   color: #e7ece4;
+   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
+   backdrop-filter: blur(12px);
+   scrollbar-color: rgba(181, 199, 143, 0.55) rgba(12, 16, 15, 0.7);
+   scrollbar-width: thin;
+   font: 500 12px/1.4 system-ui, sans-serif;
+}
+.film-grain-panel summary {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+   padding: 10px 12px;
+   color: #d9e9c5;
+   cursor: pointer;
+   user-select: none;
+}
+.film-grain-drag-handle {
+   flex: 0 0 auto;
+   padding: 3px 7px;
+   border: 1px solid rgba(213, 225, 207, 0.22);
+   border-radius: 4px;
+   background: rgba(213, 225, 207, 0.08);
+   color: #b8c7a7;
+   font: inherit;
+   font-size: 10px;
+   cursor: grab;
+   touch-action: none;
+}
+.film-grain-drag-handle:active {
+   cursor: grabbing;
+}
+.film-grain-drag-handle:hover {
+   background: rgba(213, 225, 207, 0.16);
+}
+.film-grain-controls {
+   display: grid;
+   gap: 10px;
+   padding: 0 12px 12px;
+}
+.postprocess-group {
+   display: grid;
+   gap: 8px;
+   padding-top: 9px;
+   border-top: 1px solid rgba(213, 225, 207, 0.12);
+}
+.postprocess-group h2 {
+   margin: 0;
+   color: #d9e9c5;
+   font-size: 11px;
+   font-weight: 650;
+   letter-spacing: 0.08em;
+   text-transform: uppercase;
+}
+.postprocess-actions {
+   display: flex;
+   gap: 8px;
+   padding-top: 4px;
+}
+.postprocess-actions button {
+   flex: 1;
+   padding: 7px 9px;
+   border: 1px solid rgba(213, 225, 207, 0.2);
+   border-radius: 5px;
+   background: rgba(213, 225, 207, 0.08);
+   color: #e7ece4;
+   font: inherit;
+   cursor: pointer;
+}
+.postprocess-actions button:hover {
+   background: rgba(213, 225, 207, 0.16);
+}
+.film-grain-toggle,
+.film-grain-control > span {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   gap: 12px;
+}
+.film-grain-toggle {
+   justify-content: flex-start;
+}
+.film-grain-control output {
+   color: #b8c7a7;
+   font-variant-numeric: tabular-nums;
+}
+.film-grain-panel input[type="range"] {
+   display: block;
+   width: 100%;
+   margin: 4px 0 0;
+   accent-color: #b5c78f;
+   cursor: pointer;
+}
+.film-grain-panel input[type="checkbox"] {
+   accent-color: #b5c78f;
 }

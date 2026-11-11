@@ -10,11 +10,13 @@ The page uses `public/arcade-menu.css` and `public/arcade-menu.js`. Selection em
 
 ## Projects
 
-Activating Projects opens three animated GIF cards using the names of the files in `public/project-gifs`. Clicking a card opens its GIF beside the project name and summary, with explanatory paragraphs below, following the supplied sketches.
+Activating Projects opens six project cards with animated previews: Water Renderer, Starship Sling, Adaptive Enemy Framework, Cloth Simulator, Terrain Generator and Tower Defense. The grid keeps three columns and two rows visible together, including on narrow screens. Clicking a card opens its preview beside the project name and summary, with explanatory paragraphs below, following the supplied sketches.
 
-Project names, GIF paths, summaries and explanatory paragraphs are in `public/arcade-projects.js`. The initial text is a short draft based on the filenames and visible demos; replace it there with the final project descriptions.
+Project names, GIF paths, summaries and explanatory paragraphs are in `public/arcade-projects.js`. The Adaptive Enemy Framework retains the original reinforcement-learning GIF while describing its Unity AI pipeline.
 
-Arrow keys move through cards; Enter opens a project. The detail arrows switch projects. Escape and the back buttons return to the grid and main menu, restoring selection and focus. GIFs load when the gallery first opens. Narrow screens use scrollable cards and a stacked detail layout.
+Arrow keys move through cards; Enter opens a project. The detail arrows switch projects. Escape and the back buttons return to the grid and main menu, restoring selection and focus. GIFs load when the gallery first opens. Narrow screens keep the same grid and use a stacked detail layout.
+
+The keyboard hint bar, gallery heading, intro and story caption are removed. The Menu button remains available above the cards.
 
 ## Current evidence
 
@@ -23,8 +25,8 @@ Arrow keys move through cards; Enter opens a project. The detail arrows switch p
 - `adventure-menu-390x700.png`: mobile layout.
 - `adventure-menu-in-cabinet.png`: actual 3D cabinet integration.
 - `adventure-browser-verification.json` and `adventure-cabinet-verification.json`: passing checks.
-- `projects-grid-610x530.png` and `project-*-610x530.png`: the gallery and all three detail views.
-- `projects-grid-390x700.png` and `project-agent-390x700.png`: narrow layouts.
+- `projects-grid-610x530.png` and `project-*-610x530.png`: both visible gallery rows and the five existing detail captures. `projects-grid-more-610x530.png` is an earlier scrolling-layout capture.
+- `projects-grid-390x700.png` and `project-terrain-390x700.png`: narrow layouts.
 - `projects-grid-in-cabinet.png` and `project-detail-in-cabinet.png`: project navigation on the actual cabinet display.
 - `projects-verification.json`: gallery, detail, keyboard and mobile checks.
 

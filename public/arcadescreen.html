@@ -6,6 +6,7 @@
     <title>Effan's Little World</title>
     <link rel="stylesheet" href="/arcade-menu.css">
     <script src="/arcade-projects.js" defer></script>
+    <script src="/arcade-experience.js" defer></script>
     <script src="/arcade-menu.js" defer></script>
   </head>
   <body>
@@ -48,17 +49,8 @@
               </button>
             </div>
             <div class="card-float">
-              <button class="menu-item" type="button" data-section="about" aria-pressed="false" tabindex="-1">
-                <span class="item-number" aria-hidden="true">03</span>
-                <span class="icon selected-mark" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>
-                <img class="item-sprite" src="/arcade-assets/adventure-microphone.png" alt="" width="80" height="80">
-                <span class="menu-label">About Me</span>
-                <span class="item-caption">meet the player</span>
-              </button>
-            </div>
-            <div class="card-float">
               <button class="menu-item" type="button" data-section="contact" aria-pressed="false" tabindex="-1">
-                <span class="item-number" aria-hidden="true">04</span>
+                <span class="item-number" aria-hidden="true">03</span>
                 <span class="icon selected-mark" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>
                 <img class="item-sprite" src="/arcade-assets/adventure-telephone.png" alt="" width="80" height="80">
                 <span class="menu-label">Contact</span>
@@ -73,7 +65,7 @@
             </div>
             <div class="step-controls">
               <button class="step-button" id="previous" type="button" aria-label="Previous section"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span></button>
-              <span class="position" id="position" aria-hidden="true">01 / 04</span>
+              <span class="position" id="position" aria-hidden="true">01 / 03</span>
               <button class="step-button" id="next" type="button" aria-label="Next section"><span class="icon" style="--icon: url('/arcade-assets/chevron-right.svg')" aria-hidden="true"></span></button>
             </div>
           </div>
@@ -84,13 +76,8 @@
             <button class="back-button" id="back-to-menu" type="button"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span>Menu</button>
             <span class="view-location">PORTFOLIO / PROJECTS</span>
           </div>
-          <div class="panel-heading project-heading">
-            <p class="eyebrow">THE PROJECT JOURNAL</p>
-            <h2 id="projects-title">Little builds. Big adventures.</h2>
-            <p class="intro">Pick a project and see its story unfold.</p>
-          </div>
+          <h2 id="projects-title" class="sr-only">Projects</h2>
           <div class="project-grid" id="project-grid" role="group" aria-label="Projects"></div>
-          <p class="project-grid-note"><span class="icon" style="--icon: url('/arcade-assets/sparkle.svg')" aria-hidden="true"></span>Three projects, each with a story to tell.</p>
         </section>
         <section class="project-panel" id="project-detail-view" aria-labelledby="project-title" hidden>
           <div class="view-toolbar">
@@ -103,7 +90,10 @@
           </div>
           <article class="project-detail-scroll" tabindex="0" aria-label="Project explanation">
             <div class="project-detail-overview">
-              <figure class="project-detail-preview"><img id="project-gif" alt="" decoding="async"></figure>
+              <figure class="project-detail-preview">
+                <video id="project-video" autoplay muted loop playsinline preload="none"></video>
+                <img id="project-gif" alt="" hidden>
+              </figure>
               <div class="project-detail-heading">
                 <p class="eyebrow" id="project-category"></p>
                 <h2 id="project-title" tabindex="-1"></h2>
@@ -113,13 +103,42 @@
             <div class="project-story" id="project-story"></div>
           </article>
         </section>
+        <section class="project-panel experience-panel" id="experience-view" aria-labelledby="experience-title" hidden>
+          <div class="view-toolbar">
+            <button class="back-button" id="back-from-experience" type="button"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span>Menu</button>
+            <span class="view-location">PORTFOLIO / EXPERIENCE</span>
+          </div>
+          <h2 id="experience-title" class="sr-only">Experience</h2>
+          <div class="experience-list" id="experience-list" role="list" aria-label="Work and research experience" tabindex="0"></div>
+        </section>
+        <section class="project-panel contact-panel" id="contact-view" aria-labelledby="contact-title" hidden>
+          <div class="view-toolbar">
+            <button class="back-button" id="back-from-contact" type="button"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span>Menu</button>
+            <span class="view-location">PORTFOLIO / CONTACT</span>
+          </div>
+          <div class="contact-content">
+            <nav class="contact-links" aria-label="Contact details">
+              <a class="contact-link contact-linkedin" href="https://www.linkedin.com/in/effan-shakeel-42a58721a/" target="_blank" rel="noopener noreferrer" aria-label="Visit Effan Shakeel on LinkedIn">
+                <span class="contact-icon icon" style="--icon: url('/arcade-assets/linkedin-pixel.svg')" aria-hidden="true"></span>
+                <span class="contact-label">Effan Shakeel</span>
+              </a>
+              <a class="contact-link contact-github" href="https://github.com/EffanByte" target="_blank" rel="noopener noreferrer" aria-label="Visit EffanByte on GitHub">
+                <span class="contact-icon icon" style="--icon: url('/arcade-assets/github-pixel.svg')" aria-hidden="true"></span>
+                <span class="contact-label">EffanByte</span>
+              </a>
+              <a class="contact-link contact-phone" href="tel:+923001006854" aria-label="Call +92 300 100 6854">
+                <span class="contact-icon icon" style="--icon: url('/arcade-assets/phone.svg')" aria-hidden="true"></span>
+                <span class="contact-label">+92 300 100 6854</span>
+              </a>
+              <a class="contact-link contact-email" href="mailto:effanbyte@gmail.com" aria-label="Email effanbyte@gmail.com">
+                <span class="contact-icon icon" style="--icon: url('/arcade-assets/mail-pixel.svg')" aria-hidden="true"></span>
+                <span class="contact-label">effanbyte@gmail.com</span>
+              </a>
+            </nav>
+          </div>
+        </section>
         <p class="sr-only" id="view-announcement" aria-live="polite" aria-atomic="true"></p>
       </main>
-      <footer class="screen-footer">
-        <span class="keyboard-help"><span class="icon" style="--icon: url('/arcade-assets/chevron-left.svg')" aria-hidden="true"></span><span class="icon" style="--icon: url('/arcade-assets/chevron-right.svg')" aria-hidden="true"></span>to explore</span>
-        <span id="select-help"><kbd>Enter</kbd> to select</span>
-        <span id="back-help" hidden><kbd>Esc</kbd> to go back</span>
-      </footer>
     </div>
   </body>
 </html>

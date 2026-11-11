@@ -4,4 +4,6 @@
 
 The small control and sparkle SVGs are unmodified assets from [Pixelarticons](https://github.com/halfmage/pixelarticons), by Gerrit Halfmann, licensed under MIT. See `pixelarticons-LICENSE.txt`. CSS masks tint these controls.
 
+`mail-pixel.svg`, `github-pixel.svg`, `linkedin-pixel.svg` and `location-pixel.svg` are original pixel-style contact icons created for this menu.
+
 The locally served [Pixelify Sans](https://github.com/google/fonts/tree/main/ofl/pixelifysans) variable font is licensed under the SIL Open Font License 1.1. See `PixelifySans-LICENSE.txt`.

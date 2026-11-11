@@ -6,10 +6,10 @@ const arcadeProjects = [
     title: 'Water Renderer',
     file: 'Water Renderer.gif',
     category: 'Graphics experiment',
-    summary: 'Animated waves, shifting reflections and a little world of water.',
+    summary: 'Procedural waves brought to life with surface lighting.',
     paragraphs: [
-      'A water-rendering experiment exploring how wave motion and surface highlights change the appearance of water.',
-      'The preview shows a moving water surface alongside a control panel for its visual settings. The focus is the water itself: its movement, color and reflective detail.'
+      'Implemented procedural water movement with layered sine waves and calculated surface normals for lighting.',
+      'Applied ambient, diffuse and Blinn–Phong lighting to render the moving surface.'
     ]
   },
   {
@@ -17,21 +17,55 @@ const arcadeProjects = [
     title: 'Starship Sling',
     file: 'Starship Sling.gif',
     category: 'Arcade game',
-    summary: 'A space adventure through a starfield full of obstacles and pickups.',
+    summary: 'A physics-driven space game built around slingshot puzzles.',
     paragraphs: [
-      'A space-themed arcade game with a vertically scrolling playfield. The preview follows a character through a starfield filled with asteroids, blue collectibles and fuel pickups.',
-      'Score displays, a fuel meter and ability buttons frame the action. The GIF showcases the movement, hazards and colorful feedback of the game.'
+      'Implemented slingshot gameplay and physics-based puzzles, with animations and object spawning to bring each encounter to life.',
+      'Developed the game iteratively as part of a game jam.'
     ]
   },
   {
     id: 'reinforcement-learning-agent',
-    title: 'Reinforcement Learning Trained AI Agent',
+    title: 'Adaptive Enemy Framework',
     file: 'Reinforcement Learning Trained AI Agent.gif',
-    category: 'AI experiment',
-    summary: 'A trained agent in action inside a 3D sword-fighting scene.',
+    category: 'Game AI research',
+    summary: 'A Unity enemy AI pipeline combining learned and style-conditioned behaviour.',
     paragraphs: [
-      'A reinforcement learning project featuring a trained AI agent in a game environment.',
-      'The preview shows a sword-fighting encounter, with health bars and the surrounding 3D world visible. It provides a look at the agent in motion during the encounter.'
+      'Researched reinforcement and imitation learning, then implemented a Unity-integrated AI pipeline with enemy state machines, controllers and attack execution. Integrated ML-Agents observations, actions, rewards and episode handling.',
+      'Connected demonstration processing and aggressive/defensive style critics to learning, opponent modelling and runtime inference. Coordinated the three-person FYP team and shared progress with the supervisor.'
+    ]
+  },
+  {
+    id: 'cloth-simulator',
+    title: 'Cloth Simulator',
+    file: 'Cloth Simulator.gif',
+    category: 'Physics experiment',
+    summary: 'A custom mass-spring cloth model with constraints and wind.',
+    paragraphs: [
+      'Built a custom mass-spring cloth model using structural, shear and bending constraints.',
+      'Applied force integration and wind to drive the simulation, with procedural mesh updates showing the cloth in motion.'
+    ]
+  },
+  {
+    id: 'terrain-generator',
+    title: 'Terrain Generator',
+    file: 'Terrain Generator.gif',
+    category: 'World-building tool',
+    summary: 'Interactive procedural terrain shaped by noise and fuzzy logic.',
+    paragraphs: [
+      'Built an interactive OpenGL terrain renderer using Perlin noise and related procedural-generation techniques.',
+      'Applied fuzzy logic and domain warping to shape generated terrain.'
+    ]
+  },
+  {
+    id: 'tower-defense',
+    title: 'Tower Defense',
+    file: 'Tower.gif',
+    detailPreview: 'gif',
+    category: 'Tower defense game',
+    summary: 'Build and upgrade defenses to hold back waves of enemies.',
+    paragraphs: [
+      'A tower defense game with procedurally generated maps, A* pathfinding for enemy navigation, and wave-based spawning and progression.',
+      'Turrets target enemies and fire projectiles. Tower upgrades and in-game resource and economy systems support the defense strategy.'
     ]
   }
 ];

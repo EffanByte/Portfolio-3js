@@ -60,7 +60,7 @@ const assert=require('node:assert/strict');
     };
     await clickScreen('[data-section=projects]');
     for(let i=0;i<100;i++){if(await evaluate("(()=>{const d=document.querySelector('.arcade-screen-frame').contentDocument;return !d.getElementById('projects-view').hidden&&[...d.querySelectorAll('.project-preview img')].every(i=>i.complete&&i.naturalWidth>0)})()"))break;await new Promise(r=>setTimeout(r,100));}
-    assert.equal(await evaluate("document.querySelector('.arcade-screen-frame').contentDocument.querySelectorAll('.project-card').length"),3,'The real cabinet opens the project GIF grid');
+    assert.equal(await evaluate("document.querySelector('.arcade-screen-frame').contentDocument.querySelectorAll('.project-card').length"),5,'The real cabinet opens the project GIF grid');
     const galleryCapture=await send('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});
     await fs.writeFile('design/arcade-menu/projects-grid-in-cabinet.png',Buffer.from(galleryCapture.data,'base64'));
     await clickScreen('[data-project=water-renderer]');

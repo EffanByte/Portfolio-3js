@@ -6,7 +6,7 @@ The colorful adventure menu is integrated into the existing 3D arcade cabinet. T
 
 ## Design and implementation
 
-- Four requested sections remain in order: Projects, Experience, About Me and Contact.
+- Three sections remain in order: Projects, Experience and Contact.
 - Original colorful pixel artwork replaces the monochrome icons: globe, open journal, microphone and telephone.
 - A bright meadow and cloud background, warm beveled cards, gold selection accents and a dialogue bar follow the requested whimsical fantasy direction.
 - Cards bob independently; their artwork floats and tilts. Hover lifts a card and enlarges its icon. Activation adds a short bounce and sparkle burst.
@@ -42,12 +42,13 @@ The saved verification scripts reproduce the local checks. Existing blue-design 
 
 The user's two additional sketches specify a grid of GIF cards followed by a detail view with the selected GIF at the left, explanatory text beside it, and more text below. The implementation keeps this arrangement at the arcade viewport, preserving the existing colorful theme.
 
-- Activating Projects opens the three files in `public/project-gifs`: Water Renderer, Starship Sling and Reinforcement Learning Trained AI Agent. Their complete filenames, without extensions, are the card titles.
+- Activating Projects opens six projects with animated previews: Water Renderer, Starship Sling, Adaptive Enemy Framework, Cloth Simulator, Terrain Generator and Tower Defense.
 - Every GIF uses `object-fit: contain` to preserve the complete landscape or portrait preview. The original files are unchanged. Previews are created only when the Projects grid first opens.
 - Each card opens its matching GIF, category, title, summary and two explanatory paragraphs. Copy is editable in `public/arcade-projects.js`; the initial draft uses filenames and visible demo content without adding unverified technologies or metrics.
-- All three cards and all three full explanations fit the 610 x 530 display. Header, back controls, complete names and footer are visible. The final visual check corrected crowded detail text and a low-contrast gallery caption.
+- All six complete card names and full explanations fit the 610 x 530 display. Three columns and two rows remain visible without scrolling. The header and back controls stay above the grid.
+- The gallery heading and intro, story caption and keyboard hint bar are removed, along with the JavaScript references and CSS for those elements. Keyboard navigation remains functional.
 - Native mouse clicks, Enter activation, arrow keys, Home/End, previous/next wrapping and Escape navigation passed. Going back restores the selected card and focus.
-- At 390 x 700, the grid becomes one column and the detail view stacks the GIF above its text. Keyboard navigation scrolls the focused card into view; all explanatory text is reachable without horizontal clipping.
+- At 390 x 700, the gallery retains three columns and two visible rows. The detail view stacks the GIF above its text; all explanatory text is reachable without horizontal clipping.
 - The original home-menu checks still pass. UI animations are disabled under reduced motion; native GIF playback remains available.
 - Real mouse clicks through the cabinet's projected iframe open Projects and the Water Renderer detail view. `projects-grid-in-cabinet.png` and `project-detail-in-cabinet.png` capture these states; the cabinet verification reports no errors.
 - `design/arcade-menu/projects-verification.json` records the checks; `verify-projects.cjs` reproduces them. Gallery, individual detail and mobile screenshots are saved alongside it.

@@ -2,7 +2,6 @@ const items = [...document.querySelectorAll('.menu-item')];
 const descriptions = [
   "Things I've built, one little quest at a time.",
   'A journal of my adventures so far.',
-  'Meet the person behind the pixels.',
   "Got an idea? Let's make something together."
 ];
 let selectedIndex = 0;
@@ -12,7 +11,9 @@ const projectCards = [];
 const views = {
   menu: document.getElementById('menu-view'),
   projects: document.getElementById('projects-view'),
-  detail: document.getElementById('project-detail-view')
+  detail: document.getElementById('project-detail-view'),
+  experience: document.getElementById('experience-view'),
+  contact: document.getElementById('contact-view')
 };
 
 function setView(name) {
@@ -21,11 +22,10 @@ function setView(name) {
     element.hidden = viewName !== name;
   });
   document.body.dataset.view = name;
-  document.getElementById('select-help').hidden = name === 'detail';
-  document.getElementById('back-help').hidden = name === 'menu';
 }
 
-const projectGifUrl = project => `/project-gifs/${encodeURIComponent(project.file)}`;
+const projectVideoUrl = project => `/project-videos/${encodeURIComponent(project.file.replace(/\.gif$/i, '.webm'))}`;
+const projectThumbnailUrl = project => `/project-thumbnails/${encodeURIComponent(project.file.replace(/\.gif$/i, '.webp'))}`;
 
 function buildProjectCards() {
   if (projectCards.length) return;
@@ -38,11 +38,12 @@ function buildProjectCards() {
     card.dataset.project = project.id;
     const preview = document.createElement('span');
     preview.className = 'project-preview';
-    const gif = document.createElement('img');
-    gif.src = projectGifUrl(project);
-    gif.alt = '';
-    gif.decoding = 'async';
-    preview.appendChild(gif);
+    const thumbnail = document.createElement('img');
+    thumbnail.src = projectThumbnailUrl(project);
+    thumbnail.alt = '';
+    thumbnail.loading = 'lazy';
+    thumbnail.decoding = 'async';
+    preview.appendChild(thumbnail);
     const category = document.createElement('span');
     category.className = 'project-card-category';
     category.textContent = project.category;
@@ -53,7 +54,7 @@ function buildProjectCards() {
     card.addEventListener('click', () => openProject(index));
     card.addEventListener('focus', () => chooseProject(index));
     card.addEventListener('keydown', event => {
-      const columns = window.matchMedia('(max-width: 480px)').matches ? 1 : 3;
+      const columns = 3;
       const destinations = {
         ArrowLeft: index - 1,
         ArrowRight: index + 1,
@@ -95,6 +96,61 @@ function showProjects() {
   document.getElementById('view-announcement').textContent = 'Projects. Choose a project to read its story.';
 }
 
+function showExperience() {
+  buildExperienceList();
+  setView('experience');
+  document.getElementById('experience-list').focus({ preventScroll: true });
+  document.getElementById('view-announcement').textContent = 'Experience. A list of work and research experience.';
+}
+
+function buildExperienceList() {
+  const list = document.getElementById('experience-list');
+  if (list.childElementCount) return;
+
+  const rows = arcadeExperiences.map(experience => {
+    const row = document.createElement('article');
+    row.className = 'experience-row';
+    row.setAttribute('role', 'listitem');
+
+    const logo = document.createElement('img');
+    logo.className = 'experience-logo';
+    logo.src = experience.logo;
+    logo.alt = `${experience.organization} logo`;
+
+    const content = document.createElement('div');
+    content.className = 'experience-content';
+
+    const heading = document.createElement('div');
+    heading.className = 'experience-heading';
+    const organization = document.createElement('h3');
+    organization.className = 'experience-organization';
+    organization.textContent = experience.organization;
+    const dates = document.createElement('span');
+    dates.className = 'experience-dates';
+    dates.textContent = experience.dates;
+    heading.append(organization, dates);
+
+    const role = document.createElement('p');
+    role.className = 'experience-role';
+    role.textContent = experience.role;
+    const description = document.createElement('p');
+    description.className = 'experience-description';
+    description.textContent = experience.description;
+
+    content.append(heading, role, description);
+    row.append(logo, content);
+    return row;
+  });
+
+  list.replaceChildren(...rows);
+}
+
+function showContact() {
+  setView('contact');
+  document.querySelector('.contact-link').focus({ preventScroll: true });
+  document.getElementById('view-announcement').textContent = 'Contact details. LinkedIn, GitHub, phone, and email.';
+}
+
 function showMenu() {
   setView('menu');
   choose(selectedIndex, true);
@@ -104,9 +160,25 @@ function showMenu() {
 function openProject(index, moveFocus = true) {
   chooseProject(index);
   const project = arcadeProjects[selectedProjectIndex];
+  const video = document.getElementById('project-video');
   const gif = document.getElementById('project-gif');
-  gif.src = projectGifUrl(project);
-  gif.alt = `${project.title} project demonstration`;
+  if (project.detailPreview === 'gif') {
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+    video.hidden = true;
+    gif.hidden = false;
+    gif.src = `/project-gifs/${encodeURIComponent(project.file)}`;
+    gif.alt = `${project.title} project demonstration`;
+  } else {
+    gif.removeAttribute('src');
+    gif.hidden = true;
+    video.hidden = false;
+    video.poster = projectThumbnailUrl(project);
+    video.src = projectVideoUrl(project);
+    video.setAttribute('aria-label', `${project.title} project demonstration`);
+    video.load();
+  }
   document.getElementById('project-title').textContent = project.title;
   document.getElementById('project-category').textContent = project.category;
   document.getElementById('project-summary').textContent = project.summary;
@@ -150,7 +222,7 @@ function choose(index, moveFocus = false) {
   document.getElementById('section-description').textContent = descriptions[selectedIndex];
   document.getElementById('selected-name').textContent = label;
   document.getElementById('dialogue-sprite').src = item.querySelector('.item-sprite').src;
-  document.getElementById('position').textContent = `${String(selectedIndex + 1).padStart(2, '0')} / 04`;
+  document.getElementById('position').textContent = `${String(selectedIndex + 1).padStart(2, '0')} / ${String(items.length).padStart(2, '0')}`;
   document.getElementById('selection-announcement').textContent = `${label} selected.`;
   if (moveFocus) item.focus({ preventScroll: true });
 }
@@ -164,6 +236,8 @@ function activate(index) {
     detail: { section: item.dataset.section }
   }));
   if (item.dataset.section === 'projects') showProjects();
+  if (item.dataset.section === 'experience') showExperience();
+  if (item.dataset.section === 'contact') showContact();
 }
 
 items.forEach((item, index) => {
@@ -172,7 +246,7 @@ items.forEach((item, index) => {
     if (event.target === item) item.classList.remove('is-confirmed');
   });
   item.addEventListener('keydown', event => {
-    const columns = window.matchMedia('(max-width: 480px)').matches ? 2 : 4;
+    const columns = window.matchMedia('(max-width: 480px)').matches ? 2 : 3;
     const destinations = {
       ArrowLeft: selectedIndex - 1,
       ArrowRight: selectedIndex + 1,
@@ -192,6 +266,8 @@ document.getElementById('next').addEventListener('click', () => choose(selectedI
 
 document.getElementById('back-to-menu').addEventListener('click', showMenu);
 document.getElementById('back-to-projects').addEventListener('click', showProjects);
+document.getElementById('back-from-experience').addEventListener('click', showMenu);
+document.getElementById('back-from-contact').addEventListener('click', showMenu);
 document.getElementById('previous-project').addEventListener('click', () => openProject(selectedProjectIndex - 1, false));
 document.getElementById('next-project').addEventListener('click', () => openProject(selectedProjectIndex + 1, false));
 document.addEventListener('keydown', event => {
