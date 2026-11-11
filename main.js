@@ -33,7 +33,35 @@ const rainWindowUniforms = {
   fallingSpeed: { value: 1 }
 };
 
-const physics = await createPoolPhysics();
+let poolPhysics = null;
+const pendingPhysicsOperations = [];
+const physics = {
+  addMesh(...args) {
+    if (poolPhysics) {
+      poolPhysics.addMesh(...args);
+    } else {
+      pendingPhysicsOperations.push(() => poolPhysics.addMesh(...args));
+    }
+  },
+  applyCentralImpulse(...args) {
+    if (poolPhysics) {
+      poolPhysics.applyCentralImpulse(...args);
+    } else {
+      pendingPhysicsOperations.push(() => poolPhysics.applyCentralImpulse(...args));
+    }
+  },
+  step(deltaSeconds) {
+    poolPhysics?.step(deltaSeconds);
+  }
+};
+
+createPoolPhysics().then((loadedPhysics) => {
+  poolPhysics = loadedPhysics;
+  pendingPhysicsOperations.splice(0).forEach((operation) => operation());
+}, (error) => {
+  pendingPhysicsOperations.length = 0;
+  console.error('Failed to initialize pool physics:', error);
+});
 
 let ArcadeMachine, ArcadeMachine1, ArcadeMachine2, ArcadeMachine3, ArcadeMachine4, ArcadeMachine5, ArcadeMachine6;
 let nightRainAnimation = null;
@@ -295,8 +323,6 @@ function importPubCounter() {
     createCounterCandles(pubCounter);
   });
 }
-
-importPubCounter();
 
 function createCounterCandles(counter) {
   const counterBounds = new THREE.Box3().setFromObject(counter);
@@ -574,7 +600,6 @@ function importVendingMachine() {
   });
 }
 
-importVendingMachine();
 importTubeLight();
 // importNightRainGif();
 importRainWindow();
@@ -797,6 +822,17 @@ window.addEventListener('mousemove', (event) => {
 });
 
 renderer.setAnimationLoop( animate );
+requestAnimationFrame(() => {
+  const loadDecorativeAssets = () => {
+    importPubCounter();
+    importVendingMachine();
+  };
+  if (typeof window.requestIdleCallback === 'function') {
+    window.requestIdleCallback(loadDecorativeAssets, { timeout: 3000 });
+  } else {
+    window.setTimeout(loadDecorativeAssets, 1200);
+  }
+});
 
 const controls = new OrbitControls( camera, renderer.domElement );
 // Optional: Adjust start settings
