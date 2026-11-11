@@ -53,3 +53,12 @@ The user's two additional sketches specify a grid of GIF cards followed by a det
 - Real mouse clicks through the cabinet's projected iframe open Projects and the Water Renderer detail view. `projects-grid-in-cabinet.png` and `project-detail-in-cabinet.png` capture these states; the cabinet verification reports no errors.
 - `design/arcade-menu/projects-verification.json` records the checks; `verify-projects.cjs` reproduces them. Gallery, individual detail and mobile screenshots are saved alongside it.
 - The production build passes with the existing Three.js chunk-size warning.
+
+## Performance
+
+- The renderer and postprocessing resolution are capped at 1.25 device pixels per CSS pixel.
+- GTAO runs at half the postprocessing resolution with fewer sampling and denoising taps.
+- Film grain uses one noise hash per pixel instead of sixteen.
+- Floor parallax keeps its effect but caps height-map traversal at 12 steps instead of 28.
+- In a local Chrome test on Intel Iris Xe at 923 x 351 CSS pixels and device pixel ratio 1.5, the observed frame rate increased from about 11 FPS to about 28 FPS. This is a local comparison, not a guarantee across devices.
+- `npm run build` passes; the existing Three.js bundle-size warning remains.

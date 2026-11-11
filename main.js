@@ -581,7 +581,7 @@ importRainWindow();
 
 const canvas = document.querySelector('#c');
 const renderer = new THREE.WebGLRenderer({ canvas });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.25;
@@ -589,7 +589,8 @@ const composer = new EffectComposer(renderer);
 composer.addPass(new RenderPass(scene, camera));
 const gtaoPass = new GTAOPass(scene, camera, window.innerWidth, window.innerHeight);
 gtaoPass.blendIntensity = 0.4;
-gtaoPass.updateGtaoMaterial({ radius: 0.22, scale: 1.1, thickness: 0.1, samples: 8 });
+gtaoPass.updateGtaoMaterial({ radius: 0.22, scale: 1.1, thickness: 0.1, samples: 4 });
+gtaoPass.updatePdMaterial({ samples: 8 });
 composer.addPass(gtaoPass);
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -637,29 +638,8 @@ const filmGrainPass = new ShaderPass({
       return fract(sin(dot(seed, vec2(12.9898, 78.233))) * 43758.5453);
     }
 
-    float gaussianNoise(vec2 point, float frame) {
-      float sampleSum = hashNoise(point + vec2(0.0, 0.0), frame)
-        + hashNoise(point + vec2(17.0, 59.0), frame)
-        + hashNoise(point + vec2(43.0, 11.0), frame)
-        + hashNoise(point + vec2(29.0, 37.0), frame);
-      return (sampleSum - 2.0) * 1.7320508;
-    }
-
     float coherentGrain(vec2 point, float frame) {
-      vec2 cell = floor(point);
-      vec2 blend = fract(point);
-      blend = blend * blend * (3.0 - 2.0 * blend);
-      float lower = mix(
-        gaussianNoise(cell, frame),
-        gaussianNoise(cell + vec2(1.0, 0.0), frame),
-        blend.x
-      );
-      float upper = mix(
-        gaussianNoise(cell + vec2(0.0, 1.0), frame),
-        gaussianNoise(cell + vec2(1.0, 1.0), frame),
-        blend.x
-      );
-      return mix(lower, upper, blend.y);
+      return hashNoise(floor(point), frame) * 2.0 - 1.0;
     }
 
     vec3 linearToSRGB(vec3 color) {
@@ -704,7 +684,15 @@ const filmGrainPass = new ShaderPass({
 });
 composer.addPass(filmGrainPass);
 composer.addPass(new OutputPass());
-composer.setSize(window.innerWidth, window.innerHeight);
+function resizePostProcessing(width, height) {
+  composer.setPixelRatio(renderer.getPixelRatio());
+  composer.setSize(width, height);
+  gtaoPass.setSize(
+    Math.max(1, Math.floor(width * renderer.getPixelRatio() * 0.5)),
+    Math.max(1, Math.floor(height * renderer.getPixelRatio() * 0.5))
+  );
+}
+resizePostProcessing(window.innerWidth, window.innerHeight);
 
 const cssRenderer = new CSS3DRenderer();
 cssRenderer.setSize(window.innerWidth, window.innerHeight);
@@ -888,7 +876,7 @@ floor.material.onBeforeCompile = (shader) => {
        mat3 tangentFrame = mat3(tangent * frameScale, bitangent * frameScale, geometricNormal);
        vec3 tangentView = normalize(transpose(tangentFrame) * normalize(viewPosition));
 
-       float layerCount = mix(28.0, 12.0, clamp(abs(tangentView.z), 0.0, 1.0));
+       float layerCount = mix(12.0, 6.0, clamp(abs(tangentView.z), 0.0, 1.0));
        float layerStep = 1.0 / layerCount;
        vec2 uvStep = tangentView.xy / max(abs(tangentView.z), 0.12)
          * floorParallaxScale / layerCount;
@@ -896,7 +884,7 @@ floor.material.onBeforeCompile = (shader) => {
        float currentLayer = 0.0;
        float sampledHeight = texture2D(floorHeightMap, currentUv).r;
 
-       for (int layer = 0; layer < 28; layer++) {
+       for (int layer = 0; layer < 12; layer++) {
          if (currentLayer >= sampledHeight) break;
          currentUv -= uvStep;
          currentLayer += layerStep;
@@ -1500,8 +1488,8 @@ function windowResponsiveResize()
 
     // 3. Update renderer size and pixel ratio
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    composer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25));
+    resizePostProcessing(width, height);
     filmGrainPass.uniforms.uResolution.value.set(width, height);
     cssRenderer.setSize(width, height);
 });
