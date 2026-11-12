@@ -320,8 +320,144 @@ function importPubCounter() {
     pubCounter.scale.set(1.2,1.2,1.2);
     scene.add(pubCounter);
     pubCounter.updateMatrixWorld(true);
+    createDeerHeadAboveCounter(new THREE.Box3().setFromObject(pubCounter));
     createCounterCandles(pubCounter);
   });
+}
+
+function createDeerHeadAboveCounter(counterBounds) {
+  const trophy = new THREE.Group();
+  trophy.name = 'Mounted deer head';
+  trophy.position.set(
+    counterBounds.min.x + 1.25,
+    counterBounds.max.y + 1.75,
+    counterBounds.max.z + 0.2
+  );
+  trophy.rotation.y = Math.PI;
+
+  const plaqueShape = new THREE.Shape();
+  plaqueShape.moveTo(-0.3, -0.72);
+  plaqueShape.lineTo(0.3, -0.72);
+  plaqueShape.lineTo(0.34, 0.34);
+  plaqueShape.quadraticCurveTo(0.35, 0.62, 0, 0.72);
+  plaqueShape.quadraticCurveTo(-0.35, 0.62, -0.34, 0.34);
+  plaqueShape.closePath();
+
+  const plaque = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(plaqueShape, {
+      depth: 0.075,
+      bevelEnabled: true,
+      bevelSegments: 2,
+      steps: 1,
+      bevelSize: 0.025,
+      bevelThickness: 0.02,
+      curveSegments: 8
+    }),
+    new THREE.MeshStandardMaterial({
+      color: 0x63452b,
+      emissive: 0x241507,
+      emissiveIntensity: 0.28,
+      roughness: 0.62,
+      metalness: 0.08
+    })
+  );
+  plaque.position.z = -0.11;
+  trophy.add(plaque);
+
+  const brassMaterial = new THREE.MeshStandardMaterial({
+    color: 0xa57a43,
+    metalness: 0.62,
+    roughness: 0.38
+  });
+  const boneMaterial = new THREE.MeshStandardMaterial({
+    color: 0xe3d3b1,
+    emissive: 0x302614,
+    emissiveIntensity: 0.42,
+    roughness: 0.66
+  });
+  const darkMaterial = new THREE.MeshStandardMaterial({
+    color: 0x251a14,
+    roughness: 0.82
+  });
+
+  const medallion = new THREE.Mesh(
+    new THREE.CircleGeometry(0.055, 20),
+    brassMaterial
+  );
+  medallion.position.set(0, -0.55, -0.015);
+  trophy.add(medallion);
+
+  const skull = new THREE.Mesh(
+    new THREE.SphereGeometry(0.23, 20, 16),
+    boneMaterial
+  );
+  skull.scale.set(0.82, 1.22, 0.75);
+  skull.position.set(0, -0.12, 0.07);
+  trophy.add(skull);
+
+  const muzzle = new THREE.Mesh(
+    new THREE.ConeGeometry(0.105, 0.27, 16),
+    boneMaterial
+  );
+  muzzle.rotation.x = Math.PI / 2;
+  muzzle.position.set(0, -0.36, 0.19);
+  trophy.add(muzzle);
+
+  for (const side of [-1, 1]) {
+    const ear = new THREE.Mesh(
+      new THREE.SphereGeometry(0.12, 12, 10),
+      boneMaterial
+    );
+    ear.scale.set(1, 0.42, 0.34);
+    ear.position.set(side * 0.22, 0.08, 0.015);
+    ear.rotation.z = side * 0.42;
+    trophy.add(ear);
+
+    const eye = new THREE.Mesh(
+      new THREE.SphereGeometry(0.027, 10, 8),
+      darkMaterial
+    );
+    eye.position.set(side * 0.09, -0.055, 0.225);
+    trophy.add(eye);
+  }
+
+  function addAntler(points, radius) {
+    const curve = new THREE.CatmullRomCurve3(
+      points.map(([x, y, z]) => new THREE.Vector3(x, y, z))
+    );
+    trophy.add(new THREE.Mesh(
+      new THREE.TubeGeometry(curve, 18, radius, 7, false),
+      boneMaterial
+    ));
+  }
+
+  for (const side of [-1, 1]) {
+    addAntler([
+      [side * 0.14, 0.05, 0.035],
+      [side * 0.29, 0.2, 0.025],
+      [side * 0.43, 0.42, 0.015],
+      [side * 0.51, 0.7, 0.005],
+      [side * 0.56, 0.92, 0]
+    ], 0.035);
+    addAntler([
+      [side * 0.3, 0.22, 0.025],
+      [side * 0.47, 0.27, 0.02],
+      [side * 0.61, 0.39, 0.01],
+      [side * 0.65, 0.55, 0]
+    ], 0.027);
+    addAntler([
+      [side * 0.42, 0.4, 0.015],
+      [side * 0.55, 0.47, 0.01],
+      [side * 0.59, 0.62, 0]
+    ], 0.024);
+    addAntler([
+      [side * 0.49, 0.62, 0.005],
+      [side * 0.44, 0.76, 0],
+      [side * 0.4, 0.88, 0]
+    ], 0.022);
+  }
+
+  scene.add(trophy);
 }
 
 function createCounterCandles(counter) {

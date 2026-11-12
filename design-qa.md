@@ -62,4 +62,6 @@ The user's two additional sketches specify a grid of GIF cards followed by a det
 - Floor parallax keeps its effect but caps height-map traversal at 12 steps instead of 28.
 - In a local Chrome test on Intel Iris Xe at 923 x 351 CSS pixels and device pixel ratio 1.5, the observed frame rate increased from about 11 FPS to about 28 FPS. This is a local comparison, not a guarantee across devices.
 - Pool physics now initializes in the background so scene requests and rendering can start without waiting for the external Ammo.js download. The large pub counter and vending-machine models are requested during idle time after the first frame.
+- Reduced the embedded textures in the pub counter, vending machine and hanging light from 1024px to 512px. Their GLBs now total 6.24 MB instead of 14.97 MB (58% smaller); model geometry and transparency are unchanged.
+- Added a procedural, wall-mounted deer-head trophy above the pub counter without introducing another downloaded asset.
 - `npm run build` passes; the existing Three.js bundle-size warning remains.
