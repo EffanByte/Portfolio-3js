@@ -67,5 +67,17 @@ const arcadeProjects = [
       'A tower defense game with procedurally generated maps, A* pathfinding for enemy navigation, and wave-based spawning and progression.',
       'Turrets target enemies and fire projectiles. Tower upgrades and in-game resource and economy systems support the defense strategy.'
     ]
+  },
+  {
+    id: 'coffee-cataclysm',
+    title: 'Coffee Cataclysm',
+    file: 'Coffee.gif',
+    detailPreview: 'gif',
+    category: 'Multiplayer game',
+    summary: 'A cooperative coffee-shop adventure with networked gameplay and a procedural forest.',
+    paragraphs: [
+      'Implemented multiplayer sessions for up to four players, synchronizing player and gameplay state. Built networked held-item interactions, coffee preparation, customer orders, and RPC-based gameplay actions.',
+      'Contributed character classes, combat, enemies, weapons, and companion systems, along with chunk-based procedural forest generation and game-state transitions.'
+    ]
   }
 ];

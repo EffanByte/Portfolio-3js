@@ -33,6 +33,7 @@ function buildProjectCards() {
   arcadeProjects.forEach((project, index) => {
     const float = document.createElement('div');
     float.className = 'card-float';
+    float.dataset.project = project.id;
     const card = document.createElement('button');
     card.type = 'button';
     card.className = 'project-card';

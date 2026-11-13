@@ -3,9 +3,9 @@
   "maxFps": 8,
   "paletteColors": 128,
   "dither": "none",
-  "originalBytes": 49009648,
-  "optimizedBytes": 6961787,
-  "reductionPercent": 85.8,
+  "originalBytes": 78121834,
+  "optimizedBytes": 7731110,
+  "reductionPercent": 90.1,
   "files": [
     {
       "file": "Cloth Simulator.gif",
@@ -120,6 +120,25 @@
         "bytes": 2311415
       },
       "reductionPercent": 76.7
+    },
+    {
+      "file": "Coffee.gif",
+      "fps": 8,
+      "before": {
+        "width": 1362,
+        "height": 681,
+        "frames": 183,
+        "duration": 12.45,
+        "bytes": 29112186
+      },
+      "after": {
+        "width": 256,
+        "height": 128,
+        "frames": 100,
+        "duration": 12.51,
+        "bytes": 769323
+      },
+      "reductionPercent": 97.4
     }
   ]
 }

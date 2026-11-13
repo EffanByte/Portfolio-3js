@@ -1,10 +1,10 @@
 {
   "passed": true,
   "checks": [
-    "Projects opens a six-card GIF gallery",
-    "All six resized GIF previews load",
+    "Projects opens a seven-card GIF gallery",
+    "All seven resized GIF previews load",
     "GIF preview visibly animates",
-    "Three columns and two rows fit 610 x 530 without scrolling",
+    "Four columns and two rows fit 610 x 530 without scrolling",
     "Requested headings and hint bars are removed",
     "GIF previews load only when Projects opens",
     "Each card opens its matching GIF and explanation",
@@ -13,7 +13,7 @@
     "Arrow keys and Enter open a project",
     "Previous/next project controls wrap",
     "Back buttons return to the menu",
-    "Mobile gallery retains three columns and two visible rows",
+    "Mobile gallery retains three columns and three visible rows",
     "Keyboard focus changes without scrolling",
     "All detail text is reachable on mobile",
     "Reduced motion disables UI animations"

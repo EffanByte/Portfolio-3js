@@ -10,13 +10,13 @@ The page uses `public/arcade-menu.css` and `public/arcade-menu.js`. Selection em
 
 ## Projects
 
-Activating Projects opens six project cards with animated previews: Water Renderer, Starship Sling, Adaptive Enemy Framework, Cloth Simulator, Terrain Generator and Tower Defense. The grid keeps three columns and two rows visible together, including on narrow screens. Clicking a card opens its preview beside the project name and summary, with explanatory paragraphs below, following the supplied sketches.
+Activating Projects opens seven project cards with animated previews: Water Renderer, Starship Sling, Adaptive Enemy Framework, Cloth Simulator, Terrain Generator, Tower Defense and Coffee Cataclysm. The arcade grid uses four columns and two rows; narrow screens use three columns and three rows. Clicking a card opens its preview beside the project name and summary, with explanatory paragraphs below, following the supplied sketches.
 
 Project names, GIF paths, summaries and explanatory paragraphs are in `public/arcade-projects.js`. The Adaptive Enemy Framework retains the original reinforcement-learning GIF while describing its Unity AI pipeline.
 
 Arrow keys move through cards; Enter opens a project. The detail arrows switch projects. Escape and the back buttons return to the grid and main menu, restoring selection and focus. GIFs load when the gallery first opens. Narrow screens keep the same grid and use a stacked detail layout.
 
-The grid uses looping GIFs resized to a maximum dimension of 256px, capped at 8 fps with a 128-color palette. The six files total 6.96 MB instead of 49.01 MB (85.8% smaller), with full clip durations preserved within one frame. Detail pages retain their existing WebM previews; Tower Defense uses its optimized GIF.
+The grid uses looping GIFs resized to a maximum dimension of 256px, capped at 8 fps with a 128-color palette. The seven files total 7.73 MB instead of 78.12 MB (90.1% smaller), with full clip durations preserved within one frame. Detail pages retain their existing WebM previews; Tower Defense and Coffee Cataclysm use their optimized GIFs.
 
 Starship Sling keeps its source portrait aspect ratio (368 x 732, or 92:183). Its desktop card places a vertical preview beside the label. The detail view uses a larger portrait frame with the description alongside it; narrow screens stack the portrait preview above the text. Media is contained within its frame so the full recording remains visible.
 
@@ -31,7 +31,8 @@ The keyboard hint bar, gallery heading, intro and story caption are removed. The
 - `adventure-menu-390x700.png`: mobile layout.
 - `adventure-menu-in-cabinet.png`: actual 3D cabinet integration.
 - `adventure-browser-verification.json` and `adventure-cabinet-verification.json`: passing checks.
-- `projects-grid-610x530.png` and `project-*-610x530.png`: both visible gallery rows and the five existing detail captures. `projects-grid-more-610x530.png` is an earlier scrolling-layout capture.
+- `projects-grid-610x530.png` and `projects-grid-390x700.png`: the four-column arcade and three-column mobile galleries. `project-*-610x530.png` includes detail captures for all seven projects, including Coffee Cataclysm.
+- `project-coffee-390x700.png`: Coffee Cataclysm detail on a narrow screen.
 - `projects-grid-390x700.png` and `project-terrain-390x700.png`: narrow layouts.
 - `projects-grid-in-cabinet.png` and `project-detail-in-cabinet.png`: project navigation on the actual cabinet display.
 - `projects-verification.json`: gallery, detail, keyboard and mobile checks.
