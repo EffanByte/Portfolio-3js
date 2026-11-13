@@ -43,8 +43,8 @@ The saved verification scripts reproduce the local checks. Existing blue-design 
 The user's two additional sketches specify a grid of GIF cards followed by a detail view with the selected GIF at the left, explanatory text beside it, and more text below. The implementation keeps this arrangement at the arcade viewport, preserving the existing colorful theme.
 
 - Activating Projects opens six projects with animated previews: Water Renderer, Starship Sling, Adaptive Enemy Framework, Cloth Simulator, Terrain Generator and Tower Defense.
-- Every GIF uses `object-fit: contain` to preserve the complete landscape or portrait preview. The original files are unchanged. Previews are created only when the Projects grid first opens.
-- Each card opens its matching GIF, category, title, summary and two explanatory paragraphs. Copy is editable in `public/arcade-projects.js`; the initial draft uses filenames and visible demo content without adding unverified technologies or metrics.
+- Every GIF uses `object-fit: contain` to preserve the complete landscape or portrait preview. Previews are created only when the Projects grid first opens.
+- Each card opens its matching preview, category, title, summary and two explanatory paragraphs. Copy is editable in `public/arcade-projects.js`.
 - All six complete card names and full explanations fit the 610 x 530 display. Three columns and two rows remain visible without scrolling. The header and back controls stay above the grid.
 - The gallery heading and intro, story caption and keyboard hint bar are removed, along with the JavaScript references and CSS for those elements. Keyboard navigation remains functional.
 - Native mouse clicks, Enter activation, arrow keys, Home/End, previous/next wrapping and Escape navigation passed. Going back restores the selected card and focus.
@@ -65,3 +65,18 @@ The user's two additional sketches specify a grid of GIF cards followed by a det
 - Reduced the embedded textures in the pub counter, vending machine and hanging light from 1024px to 512px. Their GLBs now total 6.24 MB instead of 14.97 MB (58% smaller); model geometry and transparency are unchanged.
 - Added a procedural, wall-mounted deer-head trophy above the pub counter without introducing another downloaded asset.
 - `npm run build` passes; the existing Three.js bundle-size warning remains.
+
+## GIF preview optimization
+
+- Restored animated GIFs in all six gallery cards, replacing their static thumbnails. They are still created only when Projects opens, with lazy loading and asynchronous decoding.
+- Reduced the six GIFs from 49,009,648 bytes to 6,961,787 bytes (85.8% smaller). Each has a maximum dimension of 256px, 7-8 fps, a 128-color palette and infinite looping. All clip durations remain within one frame of their sources.
+- Full-size sources were backed up outside public. The optimization script validates size reduction, duration, infinite-loop metadata and complete decoding of every output before replacing the files. Per-file measurements are in design/arcade-menu/gif-optimization.json.
+- The browser check confirms all six cards load the resized GIFs and the preview visibly changes between captured frames. The three-column, two-row layout, detail navigation, keyboard controls and mobile layout pass with no console errors.
+- Existing WebM detail previews are retained; Tower Defense uses its optimized GIF. The production build passes with the existing large JavaScript chunk warning.
+
+## Starship Sling portrait preview
+
+- Uses the mobile recording's 368 x 732 aspect ratio (92:183) for a tall desktop card preview and a larger portrait detail frame. The description sits alongside the detail preview; narrow screens stack it below.
+- Preview media is constrained to its frame with object-fit contain so the complete recording remains visible, including the top HUD and bottom controls.
+- Browser checks confirm portrait frame geometry, video decoding, media bounds and the mobile layout. All six cards still fit the three-column, two-row grid, and navigation and the production build pass.
+- Evidence: design/arcade-menu/project-starship-610x530.png and design/arcade-menu/project-starship-390x700.png.

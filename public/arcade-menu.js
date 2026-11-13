@@ -26,6 +26,7 @@ function setView(name) {
 
 const projectVideoUrl = project => `/project-videos/${encodeURIComponent(project.file.replace(/\.gif$/i, '.webm'))}`;
 const projectThumbnailUrl = project => `/project-thumbnails/${encodeURIComponent(project.file.replace(/\.gif$/i, '.webp'))}`;
+const projectGifUrl = project => `/project-gifs/${encodeURIComponent(project.file)}`;
 
 function buildProjectCards() {
   if (projectCards.length) return;
@@ -38,12 +39,12 @@ function buildProjectCards() {
     card.dataset.project = project.id;
     const preview = document.createElement('span');
     preview.className = 'project-preview';
-    const thumbnail = document.createElement('img');
-    thumbnail.src = projectThumbnailUrl(project);
-    thumbnail.alt = '';
-    thumbnail.loading = 'lazy';
-    thumbnail.decoding = 'async';
-    preview.appendChild(thumbnail);
+    const gif = document.createElement('img');
+    gif.src = projectGifUrl(project);
+    gif.alt = '';
+    gif.loading = 'lazy';
+    gif.decoding = 'async';
+    preview.appendChild(gif);
     const category = document.createElement('span');
     category.className = 'project-card-category';
     category.textContent = project.category;
@@ -160,6 +161,7 @@ function showMenu() {
 function openProject(index, moveFocus = true) {
   chooseProject(index);
   const project = arcadeProjects[selectedProjectIndex];
+  document.getElementById('project-detail-view').dataset.project = project.id;
   const video = document.getElementById('project-video');
   const gif = document.getElementById('project-gif');
   if (project.detailPreview === 'gif') {
@@ -168,7 +170,7 @@ function openProject(index, moveFocus = true) {
     video.load();
     video.hidden = true;
     gif.hidden = false;
-    gif.src = `/project-gifs/${encodeURIComponent(project.file)}`;
+    gif.src = projectGifUrl(project);
     gif.alt = `${project.title} project demonstration`;
   } else {
     gif.removeAttribute('src');

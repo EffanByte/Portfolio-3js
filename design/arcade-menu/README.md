@@ -16,6 +16,12 @@ Project names, GIF paths, summaries and explanatory paragraphs are in `public/ar
 
 Arrow keys move through cards; Enter opens a project. The detail arrows switch projects. Escape and the back buttons return to the grid and main menu, restoring selection and focus. GIFs load when the gallery first opens. Narrow screens keep the same grid and use a stacked detail layout.
 
+The grid uses looping GIFs resized to a maximum dimension of 256px, capped at 8 fps with a 128-color palette. The six files total 6.96 MB instead of 49.01 MB (85.8% smaller), with full clip durations preserved within one frame. Detail pages retain their existing WebM previews; Tower Defense uses its optimized GIF.
+
+Starship Sling keeps its source portrait aspect ratio (368 x 732, or 92:183). Its desktop card places a vertical preview beside the label. The detail view uses a larger portrait frame with the description alongside it; narrow screens stack the portrait preview above the text. Media is contained within its frame so the full recording remains visible.
+
+`scripts/optimize-project-gifs.cjs` reproduces the compression using FFmpeg and ffprobe. Pass a directory of full-size source GIFs and an output directory, for example `node scripts/optimize-project-gifs.cjs path/to/originals public/project-gifs`. It validates complete frame decoding, duration, looping and size reduction before copying outputs, and saves source backups outside the site build. Re-encode from original sources to avoid repeated quality loss. Measurements are in `gif-optimization.json`.
+
 The keyboard hint bar, gallery heading, intro and story caption are removed. The Menu button remains available above the cards.
 
 ## Current evidence

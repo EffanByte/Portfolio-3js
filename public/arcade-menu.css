@@ -257,8 +257,8 @@ body[data-view="projects"] .screen { min-height: 0; }
 .project-grid .card-float:nth-child(5) .project-card { background: #e7f4d8; box-shadow: inset 0 3px 0 #ffffff, inset 0 -4px 0 #b5d4ae, 0 5px 0 #719695; }
 .project-card:hover { transform: translateY(-4px); border-color: #a07b3e; }
 .project-card.is-selected { border-color: #a07b3e; }
-.project-preview { display: grid; place-items: center; flex: 1; min-height: 0; width: 100%; overflow: hidden; border: 2px solid #62817c; border-radius: 2px; background: #172c35; }
-.project-preview img, .project-detail-preview video, .project-detail-preview img { width: 100%; height: 100%; object-fit: contain; image-rendering: auto; }
+.project-preview { position: relative; display: grid; place-items: center; flex: 1; min-height: 0; width: 100%; overflow: hidden; border: 2px solid #62817c; border-radius: 2px; background: #172c35; }
+.project-preview img, .project-detail-preview video, .project-detail-preview img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: contain; image-rendering: auto; }
 .project-card-category { flex-shrink: 0; margin-top: 5px; color: #627b74; font-size: 9px; line-height: 1.1; }
 .project-card-title { flex-shrink: 0; min-height: 3.3em; margin-top: 4px; font-size: 14px; font-weight: 600; line-height: 1.1; overflow-wrap: anywhere; }
 .project-position { min-width: 48px; text-align: center; color: #42656a; font-size: 12px; }
@@ -269,7 +269,7 @@ body[data-view="projects"] .screen { min-height: 0; }
   scrollbar-width: thin; scrollbar-color: #8fae99 #fff8df;
 }
 .project-detail-overview { display: grid; grid-template-columns: .95fr 1fr; align-items: start; gap: 16px; }
-.project-detail-preview { display: grid; place-items: center; height: 148px; margin: 0; overflow: hidden; border: 2px solid #62817c; border-radius: 3px; background: #172c35; box-shadow: 0 4px 0 #afc9b7; }
+.project-detail-preview { position: relative; display: grid; place-items: center; height: 148px; margin: 0; overflow: hidden; border: 2px solid #62817c; border-radius: 3px; background: #172c35; box-shadow: 0 4px 0 #afc9b7; }
 .project-detail-heading .eyebrow { margin: 1px 0 8px; font-size: 10px; letter-spacing: 1px; }
 .project-detail-heading h2 { margin: 0; font-size: 23px; line-height: 1.08; overflow-wrap: anywhere; }
 .project-detail-heading h2:focus { outline: none; }
@@ -277,6 +277,16 @@ body[data-view="projects"] .screen { min-height: 0; }
 .project-story { margin-top: 12px; padding-top: 12px; border-top: 2px dashed #c6d5ba; color: #42656a; font-size: 15px; line-height: 1.3; }
 .project-story p { margin: 0 0 12px; }
 .project-story p:last-child { margin-bottom: 0; }
+/* Starship Sling is a portrait phone recording (368 x 732). */
+.project-card[data-project="starship-sling"] { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 4px 6px; }
+.project-card[data-project="starship-sling"] .project-preview { grid-row: 1 / 3; height: auto; aspect-ratio: 92 / 183; max-height: 100%; align-self: center; }
+.project-card[data-project="starship-sling"] .project-card-category { align-self: end; margin-top: 0; }
+.project-card[data-project="starship-sling"] .project-card-title { min-height: 0; margin-top: 0; }
+#project-detail-view[data-project="starship-sling"] .project-detail-scroll { display: grid; grid-template-columns: minmax(0, 142px) minmax(0, 1fr); gap: 0 18px; align-content: start; }
+#project-detail-view[data-project="starship-sling"] .project-detail-overview { display: contents; }
+#project-detail-view[data-project="starship-sling"] .project-detail-preview { grid-column: 1; grid-row: 1 / 3; height: auto; aspect-ratio: 92 / 183; }
+#project-detail-view[data-project="starship-sling"] .project-detail-heading { grid-column: 2; grid-row: 1; }
+#project-detail-view[data-project="starship-sling"] .project-story { grid-column: 2; grid-row: 2; }
 .experience-list {
   display: flex; flex: 1; flex-direction: column; gap: 8px; min-height: 0; overflow-y: auto;
   padding: 4px 6px 8px 3px; scrollbar-width: thin; scrollbar-color: #8fae99 #fff8df;
@@ -335,10 +345,18 @@ body[data-view="projects"] .screen { min-height: 0; }
   .project-card { padding: 4px; }
   .project-card-category { font-size: 8px; }
   .project-card-title { min-height: 5.5em; font-size: 11px; }
+  .project-card[data-project="starship-sling"] { display: flex; }
+  .project-card[data-project="starship-sling"] .project-preview { width: 100%; aspect-ratio: auto; align-self: stretch; }
+  .project-card[data-project="starship-sling"] .project-card-category { align-self: auto; margin-top: 5px; }
+  .project-card[data-project="starship-sling"] .project-card-title { min-height: 5.5em; margin-top: 4px; }
   .project-detail-scroll { padding: 12px; }
   .project-detail-overview { grid-template-columns: 1fr; gap: 16px; }
   .project-detail-preview { height: 190px; }
   .project-detail-heading h2 { font-size: 26px; }
+  #project-detail-view[data-project="starship-sling"] .project-detail-scroll { display: block; }
+  #project-detail-view[data-project="starship-sling"] .project-detail-overview { display: grid; }
+  #project-detail-view[data-project="starship-sling"] .project-detail-preview { grid-column: auto; grid-row: auto; width: min(100%, 150px); justify-self: center; }
+  #project-detail-view[data-project="starship-sling"] .project-detail-heading { grid-column: auto; grid-row: auto; }
   .experience-list { gap: 7px; padding-right: 3px; }
   .experience-row { grid-template-columns: 42px minmax(0, 1fr); gap: 8px; padding: 8px; }
   .experience-logo { width: 42px; height: 42px; }

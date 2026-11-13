@@ -1,0 +1,125 @@
+{
+  "maxDimension": 256,
+  "maxFps": 8,
+  "paletteColors": 128,
+  "dither": "none",
+  "originalBytes": 49009648,
+  "optimizedBytes": 6961787,
+  "reductionPercent": 85.8,
+  "files": [
+    {
+      "file": "Cloth Simulator.gif",
+      "fps": 8,
+      "before": {
+        "width": 670,
+        "height": 542,
+        "frames": 118,
+        "duration": 11.95,
+        "bytes": 5519154
+      },
+      "after": {
+        "width": 256,
+        "height": 207,
+        "frames": 96,
+        "duration": 12.01,
+        "bytes": 1613064
+      },
+      "reductionPercent": 70.8
+    },
+    {
+      "file": "Reinforcement Learning Trained AI Agent.gif",
+      "fps": 7,
+      "before": {
+        "width": 462,
+        "height": 353,
+        "frames": 83,
+        "duration": 10.96,
+        "bytes": 5971036
+      },
+      "after": {
+        "width": 256,
+        "height": 196,
+        "frames": 77,
+        "duration": 11,
+        "bytes": 1494218
+      },
+      "reductionPercent": 75
+    },
+    {
+      "file": "Starship Sling.gif",
+      "fps": 8,
+      "before": {
+        "width": 368,
+        "height": 732,
+        "frames": 135,
+        "duration": 9.46,
+        "bytes": 8645325
+      },
+      "after": {
+        "width": 129,
+        "height": 256,
+        "frames": 76,
+        "duration": 9.51,
+        "bytes": 709670
+      },
+      "reductionPercent": 91.8
+    },
+    {
+      "file": "Terrain Generator.gif",
+      "fps": 8,
+      "before": {
+        "width": 790,
+        "height": 597,
+        "frames": 77,
+        "duration": 7.66,
+        "bytes": 17065887
+      },
+      "after": {
+        "width": 256,
+        "height": 193,
+        "frames": 61,
+        "duration": 7.63,
+        "bytes": 731636
+      },
+      "reductionPercent": 95.7
+    },
+    {
+      "file": "Tower.gif",
+      "fps": 8,
+      "before": {
+        "width": 927,
+        "height": 573,
+        "frames": 60,
+        "duration": 4.46,
+        "bytes": 1882867
+      },
+      "after": {
+        "width": 256,
+        "height": 158,
+        "frames": 36,
+        "duration": 4.51,
+        "bytes": 101784
+      },
+      "reductionPercent": 94.6
+    },
+    {
+      "file": "Water Renderer.gif",
+      "fps": 7,
+      "before": {
+        "width": 474,
+        "height": 343,
+        "frames": 164,
+        "duration": 21.79,
+        "bytes": 9925379
+      },
+      "after": {
+        "width": 256,
+        "height": 185,
+        "frames": 153,
+        "duration": 21.85,
+        "bytes": 2311415
+      },
+      "reductionPercent": 76.7
+    }
+  ]
+}

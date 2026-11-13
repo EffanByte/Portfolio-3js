@@ -1,12 +1,14 @@
 {
   "passed": true,
   "checks": [
-    "Projects opens a five-card GIF gallery",
-    "GIF filenames are the project titles",
+    "Projects opens a six-card GIF gallery",
+    "All six resized GIF previews load",
+    "GIF preview visibly animates",
     "Three columns and two rows fit 610 x 530 without scrolling",
     "Requested headings and hint bars are removed",
-    "GIFs load only when Projects opens",
+    "GIF previews load only when Projects opens",
     "Each card opens its matching GIF and explanation",
+    "Starship Sling preserves its portrait aspect ratio in grid and detail views",
     "Detail focus and Escape restore the selected card",
     "Arrow keys and Enter open a project",
     "Previous/next project controls wrap",
